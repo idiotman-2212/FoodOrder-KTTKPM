@@ -99,8 +99,8 @@ public class AdminController {
             return "redirect:/admin/users";
         }
 
-        RoleEntity roles = new RoleEntity();
-        user.setRole(roles);
+        List<RoleEntity> roles = new ArrayList<>();
+        user.setRoles(roles);
         try {
             userRepository.save(user);
         } catch (Exception e) {
@@ -129,10 +129,11 @@ public class AdminController {
             userDTO.setPassword(null);
             userDTO.setUsername(user.getUsername());
 
-
-            if (user.getRole() != null) {
-                userDTO.setIdRole(user.getRole().getId());
+            List<RoleEntity> roles = user.getRoles();
+            if (!roles.isEmpty()) {
+                userDTO.setIdRole(roles.get(0).getId());
             }
+
             model.addAttribute("userDTO", userDTO);
             model.addAttribute("roles", roleService.getAllRoles());
             return "usersEdit";
@@ -140,7 +141,6 @@ public class AdminController {
             return "404";
         }
     }
-
 
     @PostMapping("/users/update/{id}")
     public String updateUser(@PathVariable int id, @ModelAttribute("userDTO") SignUpRequest signUpRequest) {
@@ -160,8 +160,10 @@ public class AdminController {
                 RoleEntity userRole = roleService.getRoleById(roleId);
 
                 if (userRole != null) {
-                    RoleEntity roles = new RoleEntity();
-                    user.setRole(roles);
+                    if (!user.getRoles().contains(userRole)) {
+                        user.getRoles().clear();
+                        user.getRoles().add(userRole);
+                    }
                 } else {
                     System.out.println("Vai trò không tồn tại");
                     return "redirect:/admin/users";

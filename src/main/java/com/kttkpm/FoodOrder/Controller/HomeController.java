@@ -79,8 +79,15 @@ public class HomeController {
         user.setPhone(signUpRequest.getPhone());
         user.setAddress(signUpRequest.getAddress());
 
-        RoleEntity roles = (RoleEntity) userService.getUserById(user.getId()).get().getRole();
-        user.setRole(roles);
+        RoleEntity role = roleRepository.findById(signUpRequest.getIdRole()).orElse(null);
+        if (role != null) {
+            List<RoleEntity> roles = new ArrayList<>();
+            roles.add(role);
+            user.setRoles(roles);
+        } else {
+            model.addAttribute("error", "Vai trò không tồn tại");
+            return "userRoleAdd";
+        }
 
         userRepository.save(user);
 

@@ -39,15 +39,19 @@ public class LoginController {
         return "login";
     }
 
-    @GetMapping("/login")
-    public String loginSuccess(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            return "redirect:/admin";
-        } else if (auth != null && auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
-            return "redirect:/";
+    @PostMapping("/login")
+    public String login(@ModelAttribute(name = "loginForm") SignUpRequest signUpRequest, Model m) {
+
+        UserEntity user = userRepository.findByEmail(signUpRequest.getUsername());
+
+        if (user != null && passwordEncoder.matches(signUpRequest.getPassword(), user.getPassword())) {
+            m.addAttribute("user", signUpRequest.getUsername());
+            m.addAttribute("pass", signUpRequest.getPassword());
+            return "index";
+        } else {
+            m.addAttribute("error", "Incorrect Username & Password");
+            return "signin";
         }
-        return "redirect:/login?error";
     }
 
     @GetMapping("/register")

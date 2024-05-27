@@ -48,8 +48,8 @@ public class CustomAuthenProvider implements AuthenticationProvider{
             if (password != null && passwordEncoder.matches(password, user.getPassword())) {
                 // Tạo chứng thực --- GrantedAuthority một class chứng thực của SS
                 List<GrantedAuthority> roles = new ArrayList<>();
-                RoleEntity roleEntity = new RoleEntity();
-                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getRole().getName());
+                List<RoleEntity> roleEntity = new ArrayList<>();
+                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getRoles().toString());
 
                 roles.add(grantedAuthority);
 

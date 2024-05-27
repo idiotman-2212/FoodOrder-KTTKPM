@@ -32,7 +32,6 @@ public class UserService implements UserServiceImp {
         if (userRepository.findByEmail(signUpRequest.getEmail()) != null) {
             return false;
         }
-
         UserEntity user = new UserEntity();
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
@@ -42,13 +41,16 @@ public class UserService implements UserServiceImp {
 
         RoleEntity role = roleRepository.findById(signUpRequest.getIdRole()).orElse(null);
         if (role == null) {
-            return false; // or throw an exception
+            return false;
         }
-        user.setRole(role);
+        List<RoleEntity> roles = new ArrayList<>();
+        roles.add(role);
+        user.setRoles(roles);
 
         userRepository.save(user);
         return true;
     }
+
 
 
     @Override

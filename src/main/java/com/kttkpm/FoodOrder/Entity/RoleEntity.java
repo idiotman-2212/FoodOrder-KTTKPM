@@ -13,14 +13,15 @@ public class RoleEntity {
     private int id;
     private String name;
 
-    @OneToMany(mappedBy = "role")
-    private List<UserEntity> users;
-
     private Date createDate;
+
     @PrePersist
     protected void onCreate() {
         createDate = new Date();
     }
+
+    @ManyToMany(mappedBy = "roles")
+    private List<UserEntity> users;
 
     public int getId() {
         return id;
@@ -38,19 +39,19 @@ public class RoleEntity {
         this.name = name;
     }
 
-    public List<UserEntity> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserEntity> users) {
-        this.users = users;
-    }
-
     public Date getCreateDate() {
         return createDate;
     }
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
     }
 }
