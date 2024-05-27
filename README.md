@@ -22,6 +22,9 @@
 - Trang checkout
 ![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/71789a8c-1452-4d87-a13a-e19d5cd53687)
 
+-Trang quản trị
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/9b719af8-c146-4e0e-ab32-02a065bc3e9d)
+
 
 
 
