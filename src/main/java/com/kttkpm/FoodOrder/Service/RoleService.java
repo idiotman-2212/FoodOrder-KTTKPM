@@ -16,14 +16,14 @@ public class RoleService implements RoleServiceImp {
     @Autowired
     private RoleRepository roleRepository;
     @Override
-    public List<RoleResponse> getAllRoles() {
-        List<RoleEntity> list = roleRepository.findAll();
-        List<RoleResponse> listResponse = new ArrayList<>();
+            public List<RoleResponse> getAllRoles() {
+                List<RoleEntity> list = roleRepository.findAll();
+                List<RoleResponse> listResponse = new ArrayList<>();
 
-        for (RoleEntity data: list) {
-            RoleResponse roleResponse = new RoleResponse();
-            roleResponse.setId(data.getId());
-            roleResponse.setName(data.getName());
+                for (RoleEntity data: list) {
+                    RoleResponse roleResponse = new RoleResponse();
+                    roleResponse.setId(data.getId());
+                    roleResponse.setName(data.getName());
 
             listResponse.add(roleResponse);
         }

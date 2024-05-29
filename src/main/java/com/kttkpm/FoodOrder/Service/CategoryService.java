@@ -8,6 +8,7 @@ import com.kttkpm.FoodOrder.Service.Imp.CategoryServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -71,5 +72,19 @@ public class CategoryService implements CategoryServiceImp {
         }
         return false;
     }
+    @Override
+    public List<CategoryResponse> searchCategories(String query) {
+        List<CategoryEntity> list = categoryRepository.searchCategories(query);
+        List<CategoryResponse> responseList = new ArrayList<>();
 
+        for (CategoryEntity c: list) {
+            CategoryResponse categoryResponse = new CategoryResponse();
+            categoryResponse.setId(c.getId());
+            categoryResponse.setName(c.getName());
+            categoryResponse.setCreateDate(c.getCreateDate());
+
+            responseList.add(categoryResponse);
+        }
+        return responseList;
+    }
 }

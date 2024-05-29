@@ -73,9 +73,9 @@
   <div class="container">
 
     <!--bắt sự kiện search category-->
-    <form th:action = "@{/admin/categories/search}" method = "get">
+    <form th:action = "@{/admin/categories/search}" method = "GET">
       <div class = "input-group intput-group-sm hidden-xs" style = "width:150px;">
-        <input type="text" name="keyword" class="form-control pull-right" placeholder="Search">
+        <input type="text" name="keyword" th:value="${keyword}" class="form-control pull-right" placeholder="Search">
         <div class="input-group-btn">
           <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
         </div>

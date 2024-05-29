@@ -11,4 +11,5 @@ public interface CategoryServiceImp {
     boolean deleteCategoryById(int id);
     boolean updateCategoryById(int id, String name);
 
+    List<CategoryResponse> searchCategories(String query);
 }

@@ -16,8 +16,8 @@ public class ProductRequest {
 
     @DecimalMin(value = "0.1")
     private double price;
-    private String desc;
-    private int idCategory;
+    private String description;
+    private String categoryName;
     private int quantity;
     private Date createDate;
 
@@ -45,20 +45,20 @@ public class ProductRequest {
         this.price = price;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public int getIdCategory() {
-        return idCategory;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setIdCategory(int idCategory) {
-        this.idCategory = idCategory;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public int getQuantity() {

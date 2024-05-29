@@ -59,7 +59,7 @@ public class HomeController {
             currentUser.setAddress(user.getAddress());
             List<Integer> roleIds = new ArrayList<>();
 
-            currentUser.setRoles(user.getId());
+            currentUser.setRoles(String.valueOf(user));
         }//get current User runtime
         model.addAttribute("userDTO", currentUser);
         return "userRoleAdd";
@@ -81,9 +81,8 @@ public class HomeController {
 
         RoleEntity role = roleRepository.findById(signUpRequest.getIdRole()).orElse(null);
         if (role != null) {
-            List<RoleEntity> roles = new ArrayList<>();
-            roles.add(role);
-            user.setRoles(roles);
+            RoleEntity roles = new RoleEntity();
+            user.setRole(roles);
         } else {
             model.addAttribute("error", "Vai trò không tồn tại");
             return "userRoleAdd";

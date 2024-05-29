@@ -43,19 +43,35 @@ public class UserService implements UserServiceImp {
         if (role == null) {
             return false;
         }
-        List<RoleEntity> roles = new ArrayList<>();
-        roles.add(role);
-        user.setRoles(roles);
+        RoleEntity roles = new RoleEntity();
+        user.setRole(roles);
 
         userRepository.save(user);
         return true;
     }
 
-
-
     @Override
-    public List<UserEntity> getAllUser() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUser() {
+        List<UserEntity> list = userRepository.findAll();
+        List<UserResponse> responseList = new ArrayList<>();
+
+        for (UserEntity u : list) {
+            UserResponse userResponse = new UserResponse();
+            userResponse.setId(u.getId());
+            userResponse.setUsername(u.getUsername());
+            userResponse.setEmail(u.getEmail());
+            userResponse.setCreateDate(u.getCreateDate());
+            userResponse.setPassword(u.getPassword());
+            userResponse.setPhone(u.getPhone());
+            userResponse.setAddress(u.getAddress());
+
+            RoleEntity roleEntity = u.getRole();
+            userResponse.setRoles(roleEntity != null ? roleEntity.getName() : "No Role");
+
+            responseList.add(userResponse);
+        }
+
+        return responseList;
     }
 
     @Override
@@ -76,6 +92,27 @@ public class UserService implements UserServiceImp {
     @Override
     public Optional<UserEntity> getUserByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email));
+    }
+
+    @Override
+    public List<UserResponse> searchUsers(String keyword) {
+        List<UserEntity> users = userRepository.searchUsers(keyword);
+        List<UserResponse> list = new ArrayList<>();
+        for (UserEntity u: users) {
+            UserResponse userResponse = new UserResponse();
+            userResponse.setId(u.getId());
+            userResponse.setEmail(u.getEmail());
+            userResponse.setPassword(u.getPassword());
+            userResponse.setAddress(u.getAddress());
+            userResponse.setPhone(u.getPhone());
+            userResponse.setUsername(u.getUsername());
+
+            RoleEntity roleEntity = u.getRole();
+            userResponse.setRoles(roleEntity != null ? roleEntity.getName() : "No Role");
+
+            list.add(userResponse);
+        }
+        return list;
     }
 
 }

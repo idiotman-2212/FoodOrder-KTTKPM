@@ -8,6 +8,7 @@ import com.kttkpm.FoodOrder.Payload.Request.ProductRequest;
 import com.kttkpm.FoodOrder.Payload.Request.SignUpRequest;
 import com.kttkpm.FoodOrder.Payload.Response.CategoryResponse;
 import com.kttkpm.FoodOrder.Payload.Response.ProductResponse;
+import com.kttkpm.FoodOrder.Payload.Response.UserResponse;
 import com.kttkpm.FoodOrder.Repository.CategoryRepository;
 import com.kttkpm.FoodOrder.Repository.ProductRepository;
 import com.kttkpm.FoodOrder.Repository.RoleRepository;
@@ -99,8 +100,8 @@ public class AdminController {
             return "redirect:/admin/users";
         }
 
-        List<RoleEntity> roles = new ArrayList<>();
-        user.setRoles(roles);
+        RoleEntity roles = new RoleEntity();
+        user.setRole(roles);
         try {
             userRepository.save(user);
         } catch (Exception e) {
@@ -129,9 +130,8 @@ public class AdminController {
             userDTO.setPassword(null);
             userDTO.setUsername(user.getUsername());
 
-            List<RoleEntity> roles = user.getRoles();
-            if (!roles.isEmpty()) {
-                userDTO.setIdRole(roles.get(0).getId());
+            if (user.getRole() != null) {
+                userDTO.setIdRole(user.getRole().getId());
             }
 
             model.addAttribute("userDTO", userDTO);
@@ -154,42 +154,30 @@ public class AdminController {
             }
 
             user.setUsername(signUpRequest.getUsername());
+            user.setPhone(signUpRequest.getPhone());
+            user.setAddress(signUpRequest.getAddress());
 
             if (signUpRequest.getIdRole() != 0) {
                 int roleId = signUpRequest.getIdRole();
                 RoleEntity userRole = roleService.getRoleById(roleId);
-
                 if (userRole != null) {
-                    if (!user.getRoles().contains(userRole)) {
-                        user.getRoles().clear();
-                        user.getRoles().add(userRole);
-                    }
+                    user.setRole(userRole);
                 } else {
                     System.out.println("Vai trò không tồn tại");
                     return "redirect:/admin/users";
                 }
             }
-                userRepository.save(user);
-                return "redirect:/admin/users";
-            } else {
-                return "404";
-            }
-        }//update user
-
-    @GetMapping("users/search")
-    public String searchUser(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
-        List<UserEntity> list;
-
-        if (keyword != null && !keyword.isEmpty()) {
-            list = userRepository.searchUsers(keyword);
-
-            if (list.isEmpty()) {
-                model.addAttribute("noResults", true);
-            }
+            userRepository.save(user);
+            return "redirect:/admin/users";
         } else {
-            list = userRepository.findAll();
+            return "404";
         }
-        model.addAttribute("list", list);
+    }//update user
+
+    @GetMapping("/users/search")
+    public String searchUsers(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
+        List<UserResponse> userList = userService.searchUsers(keyword);
+        model.addAttribute("users", userList);
         model.addAttribute("keyword", keyword);
         return "users";
     }//search user
@@ -200,6 +188,14 @@ public class AdminController {
         model.addAttribute("categories", categoryService.getAllCategory());
         return "category";
     }//view all categories
+
+    @GetMapping("/categories/search")
+    public String searchCategory(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
+        List<CategoryResponse> categoryList = categoryService.searchCategories(keyword);
+        model.addAttribute("categories", categoryList);
+        model.addAttribute("keyword", keyword);
+        return "category";
+    }//search category
 
     @GetMapping("/categories/add")
     public String getAddCategory(Model model) {
@@ -347,7 +343,7 @@ public class AdminController {
             productEntity.setName(productDTO.getName());
             productEntity.setPrice(productDTO.getPrice());
             productEntity.setQuantity(productDTO.getQuantity());
-            productEntity.setDescription(productDTO.getDesc());
+            productEntity.setDescription(productDTO.getDescription());
 
             // Lưu ảnh nếu người dùng chọn ảnh mới
             if (!file.isEmpty()) {

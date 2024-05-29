@@ -20,7 +20,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/", "/shop/**", "/about/**","/blog/**","/contact/**","/cart/**","/checkout/**", "/forgotpassword", "/register", "/login",
+                                .requestMatchers("/**", "/shop/**", "/about/**","/blog/**","/contact/**","/cart/**","/checkout/**", "/forgotpassword", "/register", "/login",
                                         "/resources/**", "/static/**",
                                         "/images/**",
                                         "/productImages/**",
@@ -33,6 +33,8 @@ public class SecurityConfig {
                 .formLogin(formLogin ->
                         formLogin
                                 .loginPage("/login")
+                                .usernameParameter("email")
+                                .passwordParameter("password")
                                 .permitAll()
                                 .successHandler(customAuthenticationSuccessHandler)
                 )

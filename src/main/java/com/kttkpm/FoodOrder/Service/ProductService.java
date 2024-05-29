@@ -42,6 +42,18 @@ public class ProductService implements ProductServiceImp {
     @Override
     public void insertProduct(ProductRequest productRequest) {
         try {
+// Save CategoryEntity
+            CategoryEntity categoryEntity = categoryRepository.findByName(productRequest.getCategoryName());
+            if (categoryEntity == null) {
+                categoryEntity = new CategoryEntity();
+                categoryEntity.setName(productRequest.getCategoryName());
+                try {
+                    categoryEntity = categoryRepository.save(categoryEntity);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
             // Save ProductEntity
             String pathImage = rootFolder + "/" + productRequest.getFile().getOriginalFilename();
             Path path = Paths.get(rootFolder);
@@ -58,12 +70,8 @@ public class ProductService implements ProductServiceImp {
             productEntity.setImage(productRequest.getFile().getOriginalFilename());
             productEntity.setPrice(productRequest.getPrice());
             productEntity.setQuantity(productRequest.getQuantity());
-            productEntity.setDescription(productRequest.getDesc());
-
-            CategoryEntity categoryEntity = new CategoryEntity();
-            categoryEntity.setName(productRequest.getName());
+            productEntity.setDescription(productRequest.getDescription());
             productEntity.setCategory(categoryEntity);
-            
             productEntity.setCreateDate(new Date());
 
             productRepository.save(productEntity);

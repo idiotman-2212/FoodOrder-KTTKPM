@@ -2,6 +2,7 @@ package com.kttkpm.FoodOrder.Controller;
 
 import com.kttkpm.FoodOrder.Entity.RoleEntity;
 import com.kttkpm.FoodOrder.Entity.UserEntity;
+import com.kttkpm.FoodOrder.Helper.GlobalData;
 import com.kttkpm.FoodOrder.Payload.Request.SignUpRequest;
 import com.kttkpm.FoodOrder.Repository.RoleRepository;
 import com.kttkpm.FoodOrder.Repository.UserRepository;
@@ -35,30 +36,10 @@ public class LoginController {
     private RoleRepository roleRepository;
 
     @GetMapping("/login")
-    public String login() {
+    public String login(){
+        GlobalData.cart.clear();
         return "login";
-    }
-
-    @PostMapping("/login")
-    public String login(@ModelAttribute(name = "loginForm") SignUpRequest signUpRequest, Model m) {
-
-        UserEntity user = userRepository.findByEmail(signUpRequest.getUsername());
-
-        if (user != null && passwordEncoder.matches(signUpRequest.getPassword(), user.getPassword())) {
-            m.addAttribute("user", signUpRequest.getUsername());
-            m.addAttribute("pass", signUpRequest.getPassword());
-            return "index";
-        } else {
-            m.addAttribute("error", "Incorrect Username & Password");
-            return "signin";
-        }
-    }
-
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("signupRequest", new SignUpRequest());
-        return "register";
-    }
+    }//page login
 
     @PostMapping("/register")
     public String processRegistrationForm(@ModelAttribute("signupRequest") @Valid SignUpRequest signUpRequest,

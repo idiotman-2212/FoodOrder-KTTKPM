@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ public class CustomAuthenProvider implements AuthenticationProvider{
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         // Logic xử lí đăng nhập
-        String username = authentication.getName();
+        String email = authentication.getName();
         Object credentials = authentication.getCredentials();
 
         if (credentials == null) {
@@ -42,20 +41,20 @@ public class CustomAuthenProvider implements AuthenticationProvider{
         String password = credentials.toString();
 
         // Kiểm tra xem người dùng có tồn tại hay không
-        UserEntity user = userRepository.findByEmail(username);
+        UserEntity user = userRepository.findByEmail(email);
         if (user != null) {
             // Kiểm tra mật khẩu
             if (password != null && passwordEncoder.matches(password, user.getPassword())) {
                 // Tạo chứng thực --- GrantedAuthority một class chứng thực của SS
                 List<GrantedAuthority> roles = new ArrayList<>();
                 List<RoleEntity> roleEntity = new ArrayList<>();
-                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getRoles().toString());
+                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getRole().toString());
 
                 roles.add(grantedAuthority);
 
                 // Tạo chứng thực cho security
                 UsernamePasswordAuthenticationToken token =
-                        new UsernamePasswordAuthenticationToken(username, user.getPassword(), roles);
+                        new UsernamePasswordAuthenticationToken(email, user.getPassword(), roles);
                 SecurityContextHolder.getContext().setAuthentication(token);
 
                 return token;

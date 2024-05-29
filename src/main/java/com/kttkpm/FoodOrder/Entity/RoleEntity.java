@@ -20,7 +20,7 @@ public class RoleEntity {
         createDate = new Date();
     }
 
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy = "role")
     private List<UserEntity> users;
 
     public int getId() {

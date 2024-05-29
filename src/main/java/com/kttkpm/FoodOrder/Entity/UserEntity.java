@@ -26,13 +26,9 @@ public class UserEntity {
         createDate = new Date();
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<RoleEntity> roles;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private RoleEntity role;
 
    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
    private List<CartEntity> carts;
@@ -96,12 +92,12 @@ public class UserEntity {
         this.createDate = createDate;
     }
 
-    public List<RoleEntity> getRoles() {
-        return roles;
+    public RoleEntity getRole() {
+        return role;
     }
 
-    public void setRoles(List<RoleEntity> roles) {
-        this.roles = roles;
+    public void setRole(RoleEntity role) {
+        this.role = role;
     }
 
     public List<CartEntity> getCarts() {
