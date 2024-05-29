@@ -13,7 +13,7 @@ public class ProductRequest {
 
     @NotNull(message = "Tên không được phép rỗng")
     private String name;
-
+    private String image;
     @DecimalMin(value = "0.1")
     private double price;
     private String description;
@@ -51,6 +51,14 @@ public class ProductRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getCategoryName() {

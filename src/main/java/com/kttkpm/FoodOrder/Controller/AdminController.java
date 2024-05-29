@@ -271,7 +271,7 @@ public class AdminController {
 
     @GetMapping("/product/add")
     public String getProductAdd(Model model) {
-        model.addAttribute("productRequest", new ProductEntity());
+        model.addAttribute("productRequest", new ProductRequest());
         model.addAttribute("categories", categoryService.getAllCategory());
 
         return "productsAdd";
@@ -320,10 +320,13 @@ public class AdminController {
     }
     @PostMapping("/product/update/{id}")
     public String processUpdateProduct(@ModelAttribute("productRequest") ProductRequest productDTO,
-                                       @PathVariable String idStr,
-                                       @RequestParam MultipartFile file,
-                                       @RequestParam String categoryName,
-                                       @RequestParam String desc,
+                                       @PathVariable("id") String idStr,
+                                       @RequestParam("file") MultipartFile file,
+                                       @RequestParam("price") double price,
+                                       @RequestParam("quantity") int quantity,
+                                       @RequestParam("name") String name,
+                                       @RequestParam("category") int categoryId,
+                                       @RequestParam("description") String description,
                                        Model model) throws IOException {
         int id;
         try {
@@ -340,10 +343,10 @@ public class AdminController {
             String rootFolder = "src/main/resources/static/images";
 
             // Cập nhật thông tin sản phẩm
-            productEntity.setName(productDTO.getName());
-            productEntity.setPrice(productDTO.getPrice());
-            productEntity.setQuantity(productDTO.getQuantity());
-            productEntity.setDescription(productDTO.getDescription());
+            productEntity.setName(name);
+            productEntity.setPrice(price);
+            productEntity.setQuantity(quantity);
+            productEntity.setDescription(description);
 
             // Lưu ảnh nếu người dùng chọn ảnh mới
             if (!file.isEmpty()) {
@@ -360,7 +363,8 @@ public class AdminController {
                 productEntity.setImage(newImage);
             }
 
-            CategoryEntity categoryEntity = categoryRepository.findByName(categoryName);
+            CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
             productEntity.setCategory(categoryEntity);
 
             productRepository.save(productEntity);

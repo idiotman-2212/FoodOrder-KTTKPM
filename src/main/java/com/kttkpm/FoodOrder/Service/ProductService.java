@@ -42,7 +42,7 @@ public class ProductService implements ProductServiceImp {
     @Override
     public void insertProduct(ProductRequest productRequest) {
         try {
-// Save CategoryEntity
+            // Save CategoryEntity
             CategoryEntity categoryEntity = categoryRepository.findByName(productRequest.getCategoryName());
             if (categoryEntity == null) {
                 categoryEntity = new CategoryEntity();

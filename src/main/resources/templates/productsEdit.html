@@ -62,7 +62,7 @@
 </nav>
 <div class="container">
   <h3>Product Infor</h3>
-  <form th:action="@{/admin/product/update/{id}}" method="post" th:object="${productRequest}" enctype="multipart/form-data">
+  <form th:action="@{/admin/product/update/{id}(id=${productRequest.id})}" method="post" th:object="${productRequest}" enctype="multipart/form-data">
     <div class="row">
       <div class="col-sm-5">
 
@@ -75,7 +75,7 @@
         </div>
         <div class="form-group">
           <label for="category">Select Category</label>
-          <select class="form-control" th:field="*{id}" id="category" name="category">
+          <select class="form-control" th:field="*{category}" id="category" name="category">
             <option th:each="category :${categories}"
                     th:value="${category.id}"
                     th:text="${category.name}"
@@ -88,25 +88,9 @@
                  placeholder="Price">
         </div>
         <div class="form-group">
-          <label for="size">Select Size</label>
-          <select class="form-control" th:field="*{size}" id="size" name="size">
-            <option th:each="size :${sizes}"
-                    th:value="${size.id}"
-                    th:text="${size.name}">
-            </option>
-          </select>
+          <label for="quantity">Quantity</label>
+          <input type="number" class="form-control" required th:field="*{quantity}" name="quantity" id="quantity" placeholder="Quantity">
         </div>
-
-        <div class="form-group">
-          <label for="color">Select Color</label>
-          <select class="form-control" th:field="*{color}" id="color" name="color">
-            <option th:each="color :${colors}"
-                    th:value="${color.id}"
-                    th:text="${color.name}">
-            </option>
-          </select>
-        </div>
-
         <div class="form-group">
           <label for="description">Product Description</label>
           <textarea class="form-control" rows="5" th:field="*{description}" name="description" id="description"></textarea>
@@ -115,11 +99,11 @@
       <div class="col-sm-5">
         <p>Product Image</p>
         <div class="custom-file">
-          <input type="file"  class="custom-file-input" name="productImage" accept="image/jpeg, image/png, image/jpg"  id="productImage"/>
+          <input type="file"  class="custom-file-input" name="file" accept="image/jpeg, image/png, image/jpg"  id="productImage"/>
           <label class="custom-file-label" for="productImage">Choose file</label>
         </div>
         <div class="form-group">
-          <img src="#" id="imgPreview" height="100px" width="100px" th:src="@{${'/Product Images/' + productRequest.image}}" style="margin-top: 20px; width: 300px; height: 300px" alt="">
+          <img src="#" id="imgPreview" height="100px" width="100px" th:src="@{${'/productImages/' + productRequest.image}}" style="margin-top: 20px; width: 300px; height: 300px" alt="">
         </div>
         <input type="hidden" name="imgName" th:value="${productRequest.image}">
         <button type="submit" class="btn btn-primary">Submit</button>
