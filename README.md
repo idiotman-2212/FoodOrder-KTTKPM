@@ -1,4 +1,4 @@
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/333e9f3e-f656-4e83-932c-cea7e1c70e34)# FoodOrder-KTTKPM
+# FoodOrder-KTTKPM
 Đồ án cuối môn học 
 - Trang login, register, forgotpassword
 ![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/e291799a-f2de-4bb2-875b-86466cd2fd7d)
