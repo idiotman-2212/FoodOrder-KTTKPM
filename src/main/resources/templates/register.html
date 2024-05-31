@@ -76,7 +76,7 @@
         <div th:if="${#fields.hasErrors('rePassword')}" th:errors="${signupRequest.rePassword}" class="text-danger"></div>
       </div>
 
-      <input type="submit" value="Register" class="btn btn-primary btn-block">
+      <input type="submit" id="btn-register" value="Register" class="btn btn-primary btn-block">
       <span style="margin-top: 10px">Already have an account? <a class="linkControl" href="./signin.html"
                                                                 th:href="@{/login}">Login here</a></span>
     </form>

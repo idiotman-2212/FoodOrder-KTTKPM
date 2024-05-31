@@ -3,22 +3,22 @@
 $(document).ready(function(){
 
     // Đăng ký sự kiện click cho thẻ tag được chỉ định bên HTML
-    $("#btn-sign-in").click(function(){
+    $("#btn-login").click(function(){
         // .val() : Lấy giá trị của thẻ input được chỉ định
-        var username = $("#user").val()
-        var password = $("#pass").val()
+        var email = $("#email").val()
+        var password = $("#password").val()
 
         // Xuất giá trị ra trên tab console trên trình duyệt
-        console.log("username : ",username, " password : ",password);
+        console.log("email : ",email, " password : ",password);
 
         //ajax : Dùng để call ngầm API mà không cần trình duyệt
         //axios, fetch
         //data : chỉ có khi tham số truyền ngầm
         $.ajax({
-            url: "http://localhost:8080/login/signin",
+            url: "http://localhost:9999/login",
             method: "post",
             data: {
-                email: username,
+                email: email,
                 password: password
             }
         }).done(function(data){
@@ -26,7 +26,7 @@ $(document).ready(function(){
             if(data && data.statusCode == 200) {
                 localStorage.setItem("token", data.data)
 
-                 window.location='product.html'
+                 window.location='shop.html'
 
             } else{
                 alert("Sai email hoặc mật khẩu.")
@@ -37,19 +37,19 @@ $(document).ready(function(){
 
     //  Xử lý đăng kí
 
-    $("#btn-sign-up").click(function(){
+    $("#btn-register").click(function(){
 
-        var username = $("#user-sign-up").val()
-        var password = $("#pass-sign-up").val()
-        var repassword = $("#re-pass-sign-up").val()
-        var email = $("#email-sign-up").val()
+        var username = $("#username").val()
+        var password = $("#password").val()
+        var repassword = $("#re-password").val()
+        var email = $("#email").val()
 
 
         console.log("username : ",username, " password : ",password,
                " repassword ", repassword, " email ", email );
 
         $.ajax({
-            url: "http://localhost:8080/login/signup",
+            url: "http://localhost:9999/login",
             method: "post",
             contentType: "application/json",
             data: JSON.stringify({
@@ -67,4 +67,5 @@ $(document).ready(function(){
         })
     })
 
-})*/
+})
+*/

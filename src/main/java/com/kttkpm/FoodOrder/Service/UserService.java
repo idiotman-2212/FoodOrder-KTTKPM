@@ -9,6 +9,7 @@ import com.kttkpm.FoodOrder.Repository.UserRepository;
 import com.kttkpm.FoodOrder.Service.Imp.UserServiceImp;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +23,16 @@ public class UserService implements UserServiceImp {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private RoleRepository roleRepository;
-
 
     @Override
     public boolean insertUser(SignUpRequest signUpRequest) {
         if (userRepository.findByEmail(signUpRequest.getEmail()) != null) {
             return false;
         }
+
         UserEntity user = new UserEntity();
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
@@ -43,11 +44,20 @@ public class UserService implements UserServiceImp {
         if (role == null) {
             return false;
         }
-        RoleEntity roles = new RoleEntity();
-        user.setRole(roles);
 
+        user.setRole(role);
         userRepository.save(user);
         return true;
+    }
+
+    public boolean checkPassword(String email, String password) {
+        UserEntity user = userRepository.findByEmail(email);
+        return user != null && passwordEncoder.matches(password, user.getPassword());
+    }
+
+    public boolean checkLogin(String email, String password){
+        List<UserEntity> list = userRepository.findByEmailAndPassword(email,password);
+        return list.size() > 0;
     }
 
     @Override
@@ -90,8 +100,8 @@ public class UserService implements UserServiceImp {
     }
 
     @Override
-    public Optional<UserEntity> getUserByEmail(String email) {
-        return Optional.ofNullable(userRepository.findByEmail(email));
+    public UserEntity findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override

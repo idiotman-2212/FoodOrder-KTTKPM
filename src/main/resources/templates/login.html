@@ -43,7 +43,7 @@
     <div class="col-sm-6">
       <h2>Login</h2>
       <p>Please fill out this to login</p>
-      <form th:action="@{/login}" method="post">
+      <form th:action="@{/login}" method="post" th:object="${loginForm}">
         <div class="form-group">
           <label for="email">Email</label>
           <input type="text" name="email" id="email" placeholder="Your Email" class="form-control form-control-lg">
@@ -55,7 +55,7 @@
         <div th:if="${param.error}" class="alert alert-error text-danger">
           Invalid email or password.
         </div>
-        <input type="submit" value="Login" class="btn btn-primary btn-block">
+        <input type="submit" id="btn-login" value="Login" class="btn btn-primary btn-block">
         <br>
         <span>Don't have an account <a class="linkControl" href="./signup.html" th:href="@{/register}">Register here</a></span>
         <br>

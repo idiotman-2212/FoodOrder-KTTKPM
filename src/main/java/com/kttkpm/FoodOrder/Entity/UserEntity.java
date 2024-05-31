@@ -18,9 +18,6 @@ public class UserEntity {
     private String address;
     private Date createDate;
 
-    public UserEntity() {
-    }
-
     @PrePersist
     protected void onCreate() {
         createDate = new Date();
@@ -35,6 +32,23 @@ public class UserEntity {
 
    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
    private List<FavouriteEntity> favourites;
+
+    public UserEntity() {
+    }
+
+    public UserEntity(int id, String username, String password, String email, String phone, String address, Date createDate, RoleEntity role, List<CartEntity> carts, List<FavouriteEntity> favourites) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.createDate = createDate;
+        this.role = role;
+        this.carts = carts;
+        this.favourites = favourites;
+    }
+
 
     public int getId() {
         return id;

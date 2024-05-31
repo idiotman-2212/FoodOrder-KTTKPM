@@ -23,6 +23,16 @@ public class RoleEntity {
     @OneToMany(mappedBy = "role")
     private List<UserEntity> users;
 
+    public RoleEntity() {
+    }
+
+    public RoleEntity(int id, String name, Date createDate, List<UserEntity> users) {
+        this.id = id;
+        this.name = name;
+        this.createDate = createDate;
+        this.users = users;
+    }
+
     public int getId() {
         return id;
     }

@@ -1,16 +1,20 @@
 package com.kttkpm.FoodOrder.Config;
 
-import com.kttkpm.FoodOrder.Config.CustomAuthenticationSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
     @Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -18,40 +22,39 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/**", "/shop/**", "/about/**","/blog/**","/contact/**","/cart/**","/checkout/**", "/forgotpassword", "/register", "/login",
-                                        "/resources/**", "/static/**",
-                                        "/images/**",
-                                        "/productImages/**",
-                                        "/css/**",
-                                        "/js/**").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/users/**").hasRole("USER")
-                                .anyRequest().authenticated()
+                .authorizeRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/", "/shop/**", "/about/**", "/blog/**",
+                                "/contact/**", "/cart/**", "/checkout/**", "/forgotpassword", "/register", "/login").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/users/**").hasRole("USER")
+                        .anyRequest().authenticated()
                 )
-                .formLogin(formLogin ->
-                        formLogin
-                                .loginPage("/login")
-                                .usernameParameter("email")
-                                .passwordParameter("password")
-                                .permitAll()
-                                .successHandler(customAuthenticationSuccessHandler)
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .successHandler(customAuthenticationSuccessHandler)
+                        .permitAll()
                 )
-                .logout(logout ->
-                        logout
-                                .permitAll()
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
                 )
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling
-                                .accessDeniedPage("/403")
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/403")
                 );
 
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 }

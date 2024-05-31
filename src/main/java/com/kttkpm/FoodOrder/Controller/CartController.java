@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+
 @Controller
 public class CartController {
     @Autowired
@@ -21,6 +23,9 @@ public class CartController {
 
     @GetMapping("/cart")
     public String cartGet(Model model){
+        if(GlobalData.cart == null) {
+            GlobalData.cart = new ArrayList<>(); // Khởi tạo cart nếu chưa tồn tại
+        }
         model.addAttribute("cartCount", GlobalData.cart.size());
         model.addAttribute("total",  GlobalData.cart.stream().mapToDouble(ProductEntity::getPrice).sum());
         model.addAttribute("cart", GlobalData.cart);

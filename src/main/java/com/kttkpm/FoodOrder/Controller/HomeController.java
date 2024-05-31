@@ -51,7 +51,7 @@ public class HomeController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails && ((UserDetails) principal).getUsername() != null) {
             String currentUsername = ((UserDetails)principal).getUsername();
-            UserEntity user = userService.getUserByEmail(currentUsername).get();
+            UserEntity user = userService.findUserByEmail(currentUsername);
             currentUser.setId(user.getId());
             currentUser.setEmail(user.getEmail());
             currentUser.setPassword("");

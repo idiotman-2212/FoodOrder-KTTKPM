@@ -11,13 +11,12 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
-    List<UserEntity> findByUsernameAndPassword(String username, String password);
+    List<UserEntity> findByEmailAndPassword(String email, String password);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
 
     @Query("SELECT u FROM UserEntity u WHERE u.username LIKE %:keyword% OR u.email LIKE %:keyword%")
     List<UserEntity> searchUsers(@Param("keyword") String keyword);
     UserEntity findByEmail(String email);
-
     UserEntity findByUsername(String username);
 }

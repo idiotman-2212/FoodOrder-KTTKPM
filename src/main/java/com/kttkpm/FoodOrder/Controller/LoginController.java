@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ public class LoginController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private UserService userService;
     @Autowired
@@ -40,6 +42,26 @@ public class LoginController {
         GlobalData.cart.clear();
         return "login";
     }//page login
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute(name = "loginForm") SignUpRequest signUpRequest, Model m) {
+        UserEntity user = userRepository.findByEmail(signUpRequest.getEmail());
+
+        if (user != null && passwordEncoder.matches(signUpRequest.getPassword(), user.getPassword())) {
+            m.addAttribute("email", signUpRequest.getEmail());
+            m.addAttribute("password", signUpRequest.getPassword());
+            return "index";
+        } else {
+            m.addAttribute("error", "Incorrect Username & Password");
+            return "login";
+        }
+    }
+
+    @GetMapping("/register")
+    public String registerGet(Model model){
+        model.addAttribute("signupRequest", new SignUpRequest());
+        return "register";
+    } //page register
 
     @PostMapping("/register")
     public String processRegistrationForm(@ModelAttribute("signupRequest") @Valid SignUpRequest signUpRequest,
