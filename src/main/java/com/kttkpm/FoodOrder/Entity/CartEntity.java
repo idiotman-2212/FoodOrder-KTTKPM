@@ -1,11 +1,16 @@
 package com.kttkpm.FoodOrder.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Entity(name = "carts")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CartEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,27 +23,5 @@ public class CartEntity {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<OrderEntity> orders;
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-    public List<OrderEntity> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<OrderEntity> orders) {
-        this.orders = orders;
-    }
 }

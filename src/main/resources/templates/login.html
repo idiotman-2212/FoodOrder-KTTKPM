@@ -45,14 +45,14 @@
       <p>Please fill out this to login</p>
       <form th:action="@{/login}" method="post" th:object="${loginForm}">
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="text" name="email" id="email" placeholder="Your Email" class="form-control form-control-lg">
+          <label for="username">Email</label>
+          <input type="text" name="username" id="username" placeholder="Your Email" class="form-control form-control-lg">
         </div>
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" class="form-control form-control-lg" placeholder="Password" data-type="password" name="password" id="password">
         </div>
-        <div th:if="${param.error}" class="alert alert-error text-danger">
+        <div th:if="${error}" class="alert alert-error text-danger">
           Invalid email or password.
         </div>
         <input type="submit" id="btn-login" value="Login" class="btn btn-primary btn-block">

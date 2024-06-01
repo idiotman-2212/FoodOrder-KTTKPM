@@ -3,6 +3,7 @@ package com.kttkpm.FoodOrder.Config;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 @Component
+@Slf4j
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
@@ -20,12 +22,14 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         String redirectUrl = null;
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
+        log.info("CustomAuthenticationSuccessHandler");
+        log.info(authorities.toString());
         for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority().equals("ROLE_ADMIN")) {
+            log.info(authority.getAuthority());
+            if (authority.getAuthority().equals("ADMIN")) {
                 redirectUrl = "/admin";
                 break;
-            } else if (authority.getAuthority().equals("ROLE_USER")) {
+            } else if (authority.getAuthority().equals("USER")) {
                 redirectUrl = "/users";
                 break;
             }

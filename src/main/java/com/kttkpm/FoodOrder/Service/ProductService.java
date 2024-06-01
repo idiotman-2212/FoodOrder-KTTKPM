@@ -36,8 +36,8 @@ public class ProductService implements ProductServiceImp {
     @Autowired
     private ProductConverter productConverter;
 
-    @Value("${root.folder}")
-    private String rootFolder;
+//    @Value("${root.folder}")
+    private String rootFolder="../resources/static/productImages";
 
     @Override
     public void insertProduct(ProductRequest productRequest) {
