@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 @Controller
 public class HomeController {
     @Autowired
@@ -45,6 +43,22 @@ public class HomeController {
         model.addAttribute("cartCount", GlobalData.cart.size());
         return "index";
     } //index
+
+    @GetMapping("/users")
+    public String showUserPage(Model model, /*@RequestParam(value = "name", required = false)*/ UserEntity user, String name) {
+        if (name != null && !name.isEmpty()) {
+            UserEntity userEntity = userRepository.findByUsername(name);
+            if (user != null) {
+                model.addAttribute("username", user.getUsername());
+            } else {
+                model.addAttribute("username", "User not found");
+            }
+        } else {
+            model.addAttribute("username", "Guest");
+        }
+        return "users";
+    }//show user page
+
     @GetMapping("/users/add")
     public String updateUser(Model model){
         UserResponse currentUser = new UserResponse();

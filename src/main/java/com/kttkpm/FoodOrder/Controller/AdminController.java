@@ -11,19 +11,15 @@ import com.kttkpm.FoodOrder.Payload.Response.ProductResponse;
 import com.kttkpm.FoodOrder.Payload.Response.UserResponse;
 import com.kttkpm.FoodOrder.Repository.CategoryRepository;
 import com.kttkpm.FoodOrder.Repository.ProductRepository;
-import com.kttkpm.FoodOrder.Repository.RoleRepository;
 import com.kttkpm.FoodOrder.Repository.UserRepository;
 import com.kttkpm.FoodOrder.Service.CategoryService;
 import com.kttkpm.FoodOrder.Service.ProductService;
 import com.kttkpm.FoodOrder.Service.RoleService;
 import com.kttkpm.FoodOrder.Service.UserService;
-import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,7 +69,7 @@ public class AdminController {
     public String getAcc(Model model) {
         model.addAttribute("users", userService.getAllUser());
         model.addAttribute("roles", roleService.getAllRoles());
-        return "users";
+        return "usersAdmin";
     }
 
     @GetMapping("/users/add")
@@ -179,7 +175,7 @@ public class AdminController {
         List<UserResponse> userList = userService.searchUsers(keyword);
         model.addAttribute("users", userList);
         model.addAttribute("keyword", keyword);
-        return "users";
+        return "usersAdmin";
     }//search user
 
     //Categories session

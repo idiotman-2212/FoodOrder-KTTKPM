@@ -1,30 +1,20 @@
 package com.kttkpm.FoodOrder.Controller;
 
-import com.kttkpm.FoodOrder.Entity.RoleEntity;
 import com.kttkpm.FoodOrder.Entity.UserEntity;
 import com.kttkpm.FoodOrder.Helper.GlobalData;
 import com.kttkpm.FoodOrder.Payload.Request.SignUpRequest;
 import com.kttkpm.FoodOrder.Repository.RoleRepository;
 import com.kttkpm.FoodOrder.Repository.UserRepository;
 import com.kttkpm.FoodOrder.Service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class LoginController {
@@ -48,7 +38,7 @@ public class LoginController {
         UserEntity user = userRepository.findByEmail(signUpRequest.getEmail());
 
         if (user != null && passwordEncoder.matches(signUpRequest.getPassword(), user.getPassword())) {
-            m.addAttribute("email", signUpRequest.getEmail());
+            m.addAttribute("username", signUpRequest.getEmail());
             m.addAttribute("password", signUpRequest.getPassword());
             return "index";
         } else {
