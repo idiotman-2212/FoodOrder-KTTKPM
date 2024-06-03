@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductServiceImp {
     //boolean insertProduct(String name, MultipartFile file, double price, int quantity,int idCategory, String description) throws IOException;

@@ -1,8 +1,10 @@
 package com.kttkpm.FoodOrder.Payload.Response;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.util.List;
-
+@Data
 public class CategoryResponse {
     private int id;
     private String name;
@@ -18,35 +20,7 @@ public class CategoryResponse {
         this.products = products;
     }
 
-    public int getId() {
-        return id;
+    public CategoryResponse(int id, String name) {
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public List<ProductResponse> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductResponse> products) {
-        this.products = products;
-    }
 }

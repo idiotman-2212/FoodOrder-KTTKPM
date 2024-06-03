@@ -6,9 +6,10 @@ import com.kttkpm.FoodOrder.Payload.Response.CartResponse;
 import java.util.List;
 
 public interface CartServiceImp {
-    List<CartResponse> getAllCart();
-    CartResponse getCartById(int cartId);
-    boolean insertCart(CartRequest cartRequest);
+    boolean insertProductIntoCart(CartRequest cartRequest);
     boolean updateCartById(int cartId,int userId);
     boolean deleteCartById(int cartId);
+    List<CartResponse> getCartByUserId(int userId);
+    void clearCartByUserId(int userId);
+
 }

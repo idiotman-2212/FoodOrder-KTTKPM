@@ -10,7 +10,6 @@ public class PaymentResponse {
     private PaymentStatus paymentStatus;
 
     private int orderId;
-    private int userId;
     @JsonProperty("order")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private OrderResponse orderResponse;
@@ -63,11 +62,4 @@ public class PaymentResponse {
         this.orderId = orderId;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 }

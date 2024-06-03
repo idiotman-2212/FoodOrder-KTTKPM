@@ -38,7 +38,7 @@ public class PaymentService implements PaymentServiceImp {
         PaymentEntity paymentEntity = new PaymentEntity();
 //        paymentEntity.setOrderId(idOrder);
 //        paymentEntity.setUserId(idUser);
-        paymentEntity.setPayed(isPayed);
+        paymentEntity.setIsPayed(isPayed);
         paymentEntity.setPaymentStatus(paymentStatus);
         paymentEntity.setPaymentDate(new Date());
 
@@ -49,7 +49,6 @@ public class PaymentService implements PaymentServiceImp {
         paymentResponse.setOrderId(idOrder);
         paymentResponse.setPayed(isPayed);
         paymentResponse.setPaymentStatus(paymentStatus);
-        paymentResponse.setUserId(idUser);
 
         return true;
     }
@@ -81,7 +80,7 @@ public class PaymentService implements PaymentServiceImp {
 
         if (optionalPayment.isPresent()) {
             PaymentEntity existingPayment = optionalPayment.get();
-            existingPayment.setPayed(idPayed);
+            existingPayment.setIsPayed(idPayed);
             existingPayment.setPaymentDate(new Date());
             existingPayment.setPaymentStatus(paymentStatus);
 //            existingPayment.setUserId(idUser);
@@ -101,10 +100,4 @@ public class PaymentService implements PaymentServiceImp {
         }
         return false;
     }
-    /*@Override
-    public List<PaymentEntity> getPaymentsByOrderId(int orderId) {
-        Optional<OrderEntity> orderEntity = orderRepository.findById(orderId);
-
-        return null;
-    }*/
 }

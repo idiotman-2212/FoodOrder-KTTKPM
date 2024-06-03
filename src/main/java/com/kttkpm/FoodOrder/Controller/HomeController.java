@@ -12,6 +12,7 @@ import com.kttkpm.FoodOrder.Service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,77 +36,71 @@ public class HomeController {
     CategoryService categoryService;
     @Autowired
     ProductService productService;
-    @Autowired
-    private VNPayService vnPayService;
 
     @GetMapping({"/", "/home"})
     public String home(Model model){
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+        if(user != null){
+            model.addAttribute("username", user.getUsername());
+        }else {
+            model.addAttribute("username", "Guest");
+        }
+
         model.addAttribute("cartCount", GlobalData.cart.size());
         return "index";
     } //index
 
     @GetMapping("/users")
-    public String showUserPage(Model model, /*@RequestParam(value = "name", required = false)*/ UserEntity user, String name) {
-        if (name != null && !name.isEmpty()) {
-            UserEntity userEntity = userRepository.findByUsername(name);
-            if (user != null) {
-                model.addAttribute("username", user.getUsername());
-            } else {
-                model.addAttribute("username", "User not found");
-            }
-        } else {
-            model.addAttribute("username", "Guest");
-        }
+    public String welcome(Model model) {
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+        model.addAttribute("username", user.getUsername());
         return "users";
     }//show user page
 
     @GetMapping("/users/add")
-    public String updateUser(Model model){
+    public String updateUser(Model model) {
         UserResponse currentUser = new UserResponse();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails && ((UserDetails) principal).getUsername() != null) {
-            String currentUsername = ((UserDetails)principal).getUsername();
+        if (principal instanceof UserDetails) {
+            String currentUsername = ((UserDetails) principal).getUsername();
             UserEntity user = userService.findUserByEmail(currentUsername);
-            currentUser.setId(user.getId());
-            currentUser.setEmail(user.getEmail());
-            currentUser.setPassword("");
-            currentUser.setPhone(user.getPhone());
-            currentUser.setAddress(user.getAddress());
-            List<Integer> roleIds = new ArrayList<>();
-
-            currentUser.setRoles(String.valueOf(user));
-        }//get current User runtime
+            if (user != null) {
+                currentUser.setId(user.getId());
+                currentUser.setEmail(user.getEmail());
+                currentUser.setPassword(""); // Trường hợp này không nên set password vào DTO hiển thị
+                currentUser.setPhone(user.getPhone());
+                currentUser.setAddress(user.getAddress());
+            } else {
+                model.addAttribute("error", "Người dùng không tồn tại");
+                return "403";
+            }
+        }
         model.addAttribute("userDTO", currentUser);
-        return "userRoleAdd";
+        return "userRoleAdd"; // Sửa tên view thành userRoleEdit nếu đây là trang chỉnh sửa thông tin người dùng
     }
 
     @PostMapping("/users/add")
-    public String postUserAdd(@ModelAttribute("userDTO") SignUpRequest signUpRequest, Model model) {
-        if (userRepository.findByEmail(signUpRequest.getEmail()) != null) {
-            model.addAttribute("error", "Email đã tồn tại");
-            return "userRoleAdd";
-        }
+    public String postUserEdit(@ModelAttribute("userDTO") UserResponse userResponse, Model model) {
+        // Tìm người dùng hiện tại
+        String currentUsername = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUsername);
+        if (user != null) {
+            // Cập nhật thông tin người dùng
+            user.setEmail(userResponse.getEmail());
+            user.setPhone(userResponse.getPhone());
+            user.setAddress(userResponse.getAddress());
 
-        UserEntity user = new UserEntity();
-        user.setUsername(signUpRequest.getUsername());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        user.setPhone(signUpRequest.getPhone());
-        user.setAddress(signUpRequest.getAddress());
-
-        RoleEntity role = roleRepository.findById(signUpRequest.getIdRole()).orElse(null);
-        if (role != null) {
-            RoleEntity roles = new RoleEntity();
-            user.setRole(roles);
+            // Lưu thông tin người dùng đã cập nhật
+            userRepository.save(user);
+            return "redirect:/users"; // Hoặc chuyển hướng đến trang thông báo thành công
         } else {
-            model.addAttribute("error", "Vai trò không tồn tại");
-            return "userRoleAdd";
+            model.addAttribute("error", "Người dùng không tồn tại");
+            return "403";
         }
-
-        userRepository.save(user);
-
-        return "redirect:/index";
     }
+
 
     @GetMapping("/shop")
     public String shop(Model model, @RequestParam(name = "pageNo", defaultValue ="1") Integer pageNo ){
@@ -137,6 +132,11 @@ public class HomeController {
         return "viewProduct";
     } //view product Details
 
+    @GetMapping("/403")
+    public String error(Model model){
+        return "403";
+    }// 403
+
     @GetMapping("/blog")
     public String blog(Model model){
         return "blog";
@@ -156,43 +156,5 @@ public class HomeController {
     public String contact(Model model){
         return "contact";
     }// view contact
-
-    @GetMapping("/payNow")
-    public String paynow(Model model){
-        return "orderPlaced";
-    }// view order
-
-    @GetMapping("/vnpay")
-    public String home(){
-        return "createOrder";
-    }//thanh toán vnpay
-
-    // Chuyển hướng người dùng đến cổng thanh toán VNPAY
-    @PostMapping("/submitOrder")
-    public String submidOrder(@RequestParam("amount") int orderTotal,
-                              @RequestParam("orderInfo") String orderInfo,
-                              HttpServletRequest request){
-        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-        String vnpayUrl = vnPayService.createOrder(request, orderTotal, orderInfo, baseUrl);
-        return "redirect:" + vnpayUrl;
-    }
-
-    // Sau khi hoàn tất thanh toán, VNPAY sẽ chuyển hướng trình duyệt về URL này
-    @GetMapping("/vnpay-payment-return")
-    public String paymentCompleted(HttpServletRequest request, Model model){
-        int paymentStatus =vnPayService.orderReturn(request);
-
-        String orderInfo = request.getParameter("vnp_OrderInfo");
-        String paymentTime = request.getParameter("vnp_PayDate");
-        String transactionId = request.getParameter("vnp_TransactionNo");
-        String totalPrice = request.getParameter("vnp_Amount");
-
-        model.addAttribute("orderId", orderInfo);
-        model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("paymentTime", paymentTime);
-        model.addAttribute("transactionId", transactionId);
-
-        return paymentStatus == 1 ? "ordersuccess" : "orderfail";
-    }
 
 }

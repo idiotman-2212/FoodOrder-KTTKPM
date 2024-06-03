@@ -1,11 +1,17 @@
 package com.kttkpm.FoodOrder.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "roles")
 public class RoleEntity {
     @Id
@@ -22,46 +28,4 @@ public class RoleEntity {
 
     @OneToMany(mappedBy = "role")
     private List<UserEntity> users;
-
-    public RoleEntity() {
-    }
-
-    public RoleEntity(int id, String name, Date createDate, List<UserEntity> users) {
-        this.id = id;
-        this.name = name;
-        this.createDate = createDate;
-        this.users = users;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public List<UserEntity> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserEntity> users) {
-        this.users = users;
-    }
 }

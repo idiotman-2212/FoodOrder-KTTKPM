@@ -1,25 +1,23 @@
 package com.kttkpm.FoodOrder.Controller;
 
-import com.kttkpm.FoodOrder.Entity.CategoryEntity;
-import com.kttkpm.FoodOrder.Entity.ProductEntity;
-import com.kttkpm.FoodOrder.Entity.RoleEntity;
-import com.kttkpm.FoodOrder.Entity.UserEntity;
+import com.kttkpm.FoodOrder.Entity.*;
 import com.kttkpm.FoodOrder.Payload.Request.ProductRequest;
 import com.kttkpm.FoodOrder.Payload.Request.SignUpRequest;
 import com.kttkpm.FoodOrder.Payload.Response.CategoryResponse;
+import com.kttkpm.FoodOrder.Payload.Response.OrderResponse;
 import com.kttkpm.FoodOrder.Payload.Response.ProductResponse;
 import com.kttkpm.FoodOrder.Payload.Response.UserResponse;
 import com.kttkpm.FoodOrder.Repository.CategoryRepository;
+import com.kttkpm.FoodOrder.Repository.OrderRepository;
 import com.kttkpm.FoodOrder.Repository.ProductRepository;
 import com.kttkpm.FoodOrder.Repository.UserRepository;
-import com.kttkpm.FoodOrder.Service.CategoryService;
-import com.kttkpm.FoodOrder.Service.ProductService;
-import com.kttkpm.FoodOrder.Service.RoleService;
-import com.kttkpm.FoodOrder.Service.UserService;
+import com.kttkpm.FoodOrder.Service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,12 +53,21 @@ public class AdminController {
     UserRepository userRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private CartService cartService;
 
     @Value("${root.folder}")
     private String rootFolder;
 
     @GetMapping("")
-    public String adminHome() {
+    public String adminHome(Model model) {
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+        model.addAttribute("username", user.getUsername());
         return "adminPage";
     }//page admin home
 
@@ -82,22 +89,26 @@ public class AdminController {
     @PostMapping("/users/add")
     public String postUserAdd(@ModelAttribute("userDTO") SignUpRequest userDTO) {
         UserEntity user = new UserEntity();
-        RoleEntity roleEntity = new RoleEntity();
+        RoleEntity roleEntity = null;
+
         user.setEmail(userDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setUsername(userDTO.getUsername());
 
+        // Kiểm tra xem vai trò có tồn tại không
         if (userDTO.getIdRole() != 0) {
             int roleId = userDTO.getIdRole();
             roleEntity = roleService.getRoleById(roleId);
-        }
-        if (roleEntity == null) {
-            System.out.println("Vai trò không tồn tại");
-            return "redirect:/admin/users";
+            if (roleEntity == null) {
+                // Nếu vai trò không tồn tại, xử lý theo ý bạn (ví dụ: hiển thị thông báo lỗi)
+                System.out.println("Vai trò không tồn tại");
+                return "redirect:/admin/users";
+            }
         }
 
-        RoleEntity roles = new RoleEntity();
-        user.setRole(roles);
+        // Gán vai trò cho người dùng
+        user.setRole(roleEntity);
+
         try {
             userRepository.save(user);
         } catch (Exception e) {
@@ -371,4 +382,29 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/orders")
+    public String showOrderPage(Model model){
+        model.addAttribute("orders", orderService.getAllOrder());
+        return "orderAdmin";
+    }
+
+    @GetMapping("/orders/delete/{id}")
+    public String deleteOrder(@PathVariable int id) {
+        orderService.deleteOrderById(id);
+        return "redirect:/admin/orders";
+    }//delete 1 order
+
+    @GetMapping("/orders/update/{id}")
+    public String getOrderUpdateForm(@PathVariable int id, Model model) {
+        OrderResponse order = orderService.getOrderById(id);
+        model.addAttribute("order", order);
+        model.addAttribute("orderStatuses", OrderStatus.values());
+        return "ordersEdit";
+    }
+
+    @PostMapping("/orders/update/{id}")
+    public String updateOrderStatus(@PathVariable int id, @RequestParam OrderStatus orderStatus) {
+        orderService.updateOrderStatus(id, orderStatus);
+        return "redirect:/admin/orders";
+    }
 }

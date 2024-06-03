@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     $.ajax({
 
-        url: "http://localhost:8080/cart/{idUser}",
+        url: "http://localhost:9999/cart/{idUser}",
         method: "get",
 
     }).done(function (data) {
@@ -37,7 +37,7 @@ $(document).ready(function () {
                         </div>
 
                         <input class="mtext-104 cl3 txt-center num-product" type="number"
-                            name="num-product1" value=${product.quanity}>
+                            name="num-product1" value=${product.quantity}>
 
                         <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                             <i class="fs-16 zmdi zmdi-plus"></i>

@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: "http://localhost:8080/product",
+        url: "http://localhost:9999/product",
         method: "GET",
     }).done(function (data) {
         console.log("Server trả về", data);

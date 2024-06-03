@@ -16,7 +16,7 @@ public class PaymentConverter {
         PaymentResponse paymentResponse = new PaymentResponse();
         paymentResponse.setId(paymentEntity.getId());
         paymentResponse.setPaymentStatus(paymentEntity.getPaymentStatus());
-        paymentResponse.setPayed(paymentEntity.getPayed());
+        paymentResponse.setPayed(paymentEntity.getIsPayed());
 //        paymentResponse.setOrderId(paymentEntity.getOrderId());
 //        paymentResponse.setUserId(paymentEntity.getUserId());
         return paymentResponse;
@@ -25,7 +25,7 @@ public class PaymentConverter {
     public PaymentEntity toPaymentEntity(PaymentResponse paymentResponse) {
         PaymentEntity entity = new PaymentEntity();
         entity.setId(paymentResponse.getId());
-        entity.setPayed(paymentResponse.getPayed());
+        entity.setIsPayed(paymentResponse.getPayed());
         entity.setPaymentStatus(paymentResponse.getPaymentStatus());
 //        entity.setUserId(paymentResponse.getUserId());
 //        entity.setOrderId(paymentResponse.getOrderId());

@@ -13,7 +13,8 @@
   <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
   <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
   <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}" />
-  <title>Document</title>
+
+  <title>Home</title>
   <style>
         .carousel-inner img {
             width: 100%;
@@ -52,10 +53,7 @@
           <a class="nav-link" th:href="@{/contact}" href="#">Contact</a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">Login</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">Logout</a>
+          <a class="nav-link" th:href="@{/viewOrderHistory}" href="#">Order History</a>
         </li>
         <li class="nav-item active">
           <a class="nav-link" th:href="@{/cart}" href="#">Cart</a>
@@ -63,13 +61,19 @@
         <li class="nav-item active">
           <span class="nav-link" th:text="${cartCount}">0</span>
         </li>
+        <li class="nav-item active">
+          <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">Login</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">Logout</a>
+        </li>
       </ul>
 
     </div>
   </div>
 </nav>
 <div class="jumbotron text-center">
-  <h1 class="display-4">Welcome </h1>
+  <h1 class="display-4">Welcome, <span th:text="${username}">Guest</span> </h1>
   <p>Take a trip to the Cloudy Store</p>
   <form th:action="@{/users/add}">
     <button type="submit" class="btn btn-primary">Manage your Account</button>

@@ -17,7 +17,8 @@ public class CartConverter {
 
         CartResponse cartResponse = new CartResponse();
         cartResponse.setId(cartEntity.getId());
-        cartResponse.setUserId(cartEntity.getUser().getId());
+        cartResponse.setUserName(cartEntity.getUser().getUsername());
+        cartResponse.setProduct(cartEntity.getProduct());
         // Chuyển đổi tập hợp các OrderEntity thành tập hợp các OrderResponse
 //        cartResponse.setOrderResponseSet(
 //                cartEntity.getOrders().stream()

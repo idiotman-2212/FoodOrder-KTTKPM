@@ -1,13 +1,11 @@
 package com.kttkpm.FoodOrder.Payload.Request;
 
+import lombok.Data;
+
+@Data
 public class CartRequest {
     private int userId;
+    private int quantity;
+    private int productId;
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 }

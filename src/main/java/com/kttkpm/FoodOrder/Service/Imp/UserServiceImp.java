@@ -15,5 +15,6 @@ public interface UserServiceImp {
     void deleteUserById(int id);
     Optional<UserEntity> getUserById(int id);
     UserEntity findUserByEmail(String email);
+    UserEntity findUserByUsername(String username);
     List<UserResponse> searchUsers(String keyword);
 }

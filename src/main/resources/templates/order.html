@@ -1,34 +1,29 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/fonts/font-awesome-4.7.0/css/font-awesome.min.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/fonts/iconic/css/material-design-iconic-font.min.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/fonts/linearicons-v1.0.0/icon-font.min.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/animate/animate.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/css-hamburgers/hamburgers.min.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/animsition/css/animsition.min.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/select2/select2.min.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/daterangepicker/daterangepicker.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/slick/slick.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/MagnificPopup/magnific-popup.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
-    <title>Create Order</title>
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}" />
+
+    <title>Order Details</title>
 </head>
 
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/}" href="#">
-            <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="auto" height="70"
-                 class="d-inline-block align-top" alt=""/>
+            <img th:src="@{/images/icons/logo-01.png}" src="../static/images/logo.png" width="auto" height="20" class="d-inline-block align-top" alt=""/>
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -71,16 +66,25 @@
     </div>
 </nav>
 <div class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <img th:src="@{/images/vnpay-logo.png}" style="width: 200px">
-                    <h2 class="card-title">Tạo Đơn Hàng</h2>
-                    <form th:action="@{/checkout/orderSuccess}" method="post">
+    <!--Section: Block Content-->
+    <section class="mt-5 mb-4">
+        <!--Grid row-->
+        <div class="row">
+            <!--Grid column-->
+            <div class="col-lg-8 mb-4">
+                <!-- Card -->
+                <div class="card wish-list pb-1">
+                    <div class="card-body">
+                        <form th:action="@{/checkout/submitOrder}" method="post">
+                        <h5 class="mb-2">Order Details</h5>
+                        <!-- Order Information -->
                         <div class="md-form md-outline mb-0 mb-lg-4">
                             <label for="orderDate">Order Date</label>
                             <input type="text" id="orderDate" th:value="${order.orderDate}" required class="form-control mb-0 mb-lg-2" readonly>
+                        </div>
+                        <div class="md-form md-outline mb-0 mb-lg-4">
+                            <label for="orderStatus">Order Status</label>
+                            <input type="text" id="orderStatus" th:value="${order.orderStatus}" required class="form-control mb-0 mb-lg-2" readonly>
                         </div>
                         <div class="md-form md-outline mb-0 mb-lg-4">
                             <label for="orderDesc">Order Description</label>
@@ -97,17 +101,19 @@
                             <label for="orderFee">Order Fee</label>
                             <input type="text" id="orderFee" th:value="${order.orderFee}" required class="form-control mb-0 mb-lg-2" readonly>
                         </div>
-                        <button type="submit" class="btn btn-primary">Thanh toán</button>
-                    </form>
+                            <button type="submit" class="btn btn-primary">Thanh toán</button>
+                        </form>
+                    </div>
                 </div>
+                <!-- Card -->
             </div>
         </div>
-    </div>
+        <!--Grid row-->
+    </section>
+    <!--Section: Block Content-->
 </div>
 
-<br>
-<br>
-<br>
+<!-- Footer -->
 <footer class="bg3 p-t-75 p-b-32">
     <div class="container">
         <div class="row">
@@ -144,22 +150,22 @@
                 </h4>
                 <ul>
                     <li class="p-b-10">
-                        <a th:href="@{/#}" class="stext-107 cl7 hov-cl1 trans-04">
+                        <a th:href="@{/contact}" class="stext-107 cl7 hov-cl1 trans-04">
                             Track Order
                         </a>
                     </li>
                     <li class="p-b-10">
-                        <a th:href="@{/#}" class="stext-107 cl7 hov-cl1 trans-04">
+                        <a th:href="@{/contact}" class="stext-107 cl7 hov-cl1 trans-04">
                             Returns
                         </a>
                     </li>
                     <li class="p-b-10">
-                        <a th:href="@{/#}" class="stext-107 cl7 hov-cl1 trans-04">
+                        <a th:href="@{/contact}" class="stext-107 cl7 hov-cl1 trans-04">
                             Shipping
                         </a>
                     </li>
                     <li class="p-b-10">
-                        <a th:href="@{/#}" class="stext-107 cl7 hov-cl1 trans-04">
+                        <a th:href="@{/contact}" class="stext-107 cl7 hov-cl1 trans-04">
                             FAQs
                         </a>
                     </li>
@@ -173,13 +179,13 @@
                     Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
                 </p>
                 <div class="p-t-27">
-                    <a th:href="@{/#}" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+                    <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
                         <i class="fa fa-facebook"></i>
                     </a>
-                    <a th:href="@{/#}" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+                    <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
                         <i class="fa fa-instagram"></i>
                     </a>
-                    <a th:href="@{/#}" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+                    <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
                         <i class="fa fa-pinterest-p"></i>
                     </a>
                 </div>
@@ -194,7 +200,7 @@
                         <div class="focus-input1 trans-04"></div>
                     </div>
                     <div class="p-t-18">
-                        <button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
+                        <button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn1 p-lr-15 trans-04">
                             Subscribe
                         </button>
                     </div>
@@ -203,34 +209,44 @@
         </div>
         <div class="p-t-40">
             <div class="flex-c-m flex-w p-b-18">
-                <a th:href="@{/#}" class="m-all-1">
-                    <img th:src="@{/images/icons/icon-pay-01.png}" alt="ICON-PAY">
+                <a href="#" class="m-all-1">
+                    <img src="../images/icons/icon-pay-01.png" alt="ICON-PAY">
                 </a>
-                <a th:href="@{/#}" class="m-all-1">
-                    <img th:src="@{/images/icons/icon-pay-02.png}" alt="ICON-PAY">
+                <a href="#" class="m-all-1">
+                    <img src="../images/icons/icon-pay-02.png" alt="ICON-PAY">
                 </a>
-                <a th:href="@{/#}" class="m-all-1">
-                    <img th:src="@{/images/icons/icon-pay-03.png}" alt="ICON-PAY">
+                <a href="#" class="m-all-1">
+                    <img src="../images/icons/icon-pay-03.png" alt="ICON-PAY">
                 </a>
-                <a th:href="@{/#}" class="m-all-1">
-                    <img th:src="@{/images/icons/icon-pay-04.png}" alt="ICON-PAY">
+                <a href="#" class="m-all-1">
+                    <img src="../images/icons/icon-pay-04.png" alt="ICON-PAY">
                 </a>
-                <a th:href="@{/#}" class="m-all-1">
-                    <img th:src="@{/images/icons/icon-pay-05.png}" alt="ICON-PAY">
+                <a href="#" class="m-all-1">
+                    <img src="../images/icons/icon-pay-05.png" alt="ICON-PAY">
                 </a>
             </div>
             <p class="stext-107 cl6 txt-center">
-
-                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com/" target="_blank">Colorlib</a>
-
+                Copyright &copy;
+                <script>document.write(new Date().getFullYear());</script> All rights reserved |
+                This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
             </p>
         </div>
     </div>
 </footer>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
+<script src="../vendor/animsition/js/animsition.min.js"></script>
+<script src="../vendor/bootstrap/js/popper.js"></script>
+<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="../vendor/select2/select2.min.js"></script>
+<script src="../vendor/daterangepicker/moment.min.js"></script>
+<script src="../vendor/daterangepicker/daterangepicker.js"></script>
+<script src="../vendor/slick/slick.min.js"></script>
+<script src="../vendor/parallax100/parallax100.js"></script>
+<script src="../vendor/MagnificPopup/jquery.magnific-popup.min.js"></script>
+<script src="../vendor/isotope/isotope.pkgd.min.js"></script>
+<script src="../vendor/sweetalert/sweetalert.min.js"></script>
+<script src="../vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="../js/main.js"></script>
 </body>
-
 </html>
