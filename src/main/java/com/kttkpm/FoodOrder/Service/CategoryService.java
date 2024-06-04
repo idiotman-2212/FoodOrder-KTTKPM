@@ -3,9 +3,14 @@ package com.kttkpm.FoodOrder.Service;
 import com.kttkpm.FoodOrder.Entity.CategoryEntity;
 import com.kttkpm.FoodOrder.Helper.CategoryConverter;
 import com.kttkpm.FoodOrder.Payload.Response.CategoryResponse;
+import com.kttkpm.FoodOrder.Payload.Response.ProductResponse;
 import com.kttkpm.FoodOrder.Repository.CategoryRepository;
 import com.kttkpm.FoodOrder.Service.Imp.CategoryServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -86,5 +91,17 @@ public class CategoryService implements CategoryServiceImp {
             responseList.add(categoryResponse);
         }
         return responseList;
+    }
+
+    public Page<CategoryResponse> getAllCategoryPage(Integer pageNo) {
+        int pageSize = 5; // Số sản phẩm trên mỗi trang
+        List<CategoryResponse> allCategory = getAllCategory();
+        // Phân trang dữ liệu
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allCategory.size());
+
+        List<CategoryResponse> sublist = allCategory.subList(start, end);
+        return new PageImpl<>(sublist, pageable, allCategory.size());
     }
 }

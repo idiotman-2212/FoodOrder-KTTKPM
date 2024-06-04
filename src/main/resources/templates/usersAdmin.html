@@ -105,6 +105,31 @@
   </table>
 </div>
 
+<!-- Kiểm tra totalPage có giá trị không null -->
+<th:block th:if="${totalPage != null}">
+  <!-- Tạo thanh phân trang -->
+  <div class="pagination">
+    <ul class="pagination pagination-sm no-margin pull-right">
+      <li th:class="${currentPage == 1 ? 'disabled' : ''}">
+        <a th:href="@{'/admin/users?pageNo=1'}" aria-label="Previous">
+          <span aria-hidden="true"> << </span>
+        </a>
+      </li>
+
+      <!-- Sử dụng biểu thức Thymeleaf chỉ khi totalPage khác null -->
+      <li th:each="i : ${#numbers.sequence(1, totalPage)}" th:class="${currentPage == i ? 'active' : ''}">
+        <a th:href="@{'/admin/users?pageNo=' + ${i}}" th:text="${i}"></a>
+      </li>
+
+      <li th:class="${currentPage == totalPage ? 'disabled' : ''}">
+        <a th:href="@{'/admin/users?pageNo=' + ${totalPage}}" aria-label="Next">
+          <span aria-hidden="true"> >> </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</th:block>
+
 <br>
 <br>
 <br>

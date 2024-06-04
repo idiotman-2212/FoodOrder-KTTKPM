@@ -73,8 +73,16 @@ public class AdminController {
 
     //Accounts
     @GetMapping("/users")
-    public String getAcc(Model model) {
-        model.addAttribute("users", userService.getAllUser());
+    public String getAcc(Model model , @RequestParam(name = "pageNo", defaultValue ="1") Integer pageNo ) {
+        Page<UserResponse> users = userService.getAllUsersPage(pageNo);
+        if(pageNo != null){
+            model.addAttribute("totalPage", users.getTotalPages());
+            model.addAttribute("currentPage", pageNo);
+            model.addAttribute("users", users);
+
+        }else {
+            model.addAttribute("error", "Không thể lấy danh sách danh mục.");
+        }
         model.addAttribute("roles", roleService.getAllRoles());
         return "usersAdmin";
     }
@@ -191,8 +199,16 @@ public class AdminController {
 
     //Categories session
     @GetMapping("/categories")
-    public String getCat(Model model) {
-        model.addAttribute("categories", categoryService.getAllCategory());
+    public String getCat(Model model, @RequestParam(name = "pageNo", defaultValue ="1") Integer pageNo ) {
+        Page<CategoryResponse> category = categoryService.getAllCategoryPage(pageNo);
+        if(pageNo != null){
+            model.addAttribute("totalPage", category.getTotalPages());
+            model.addAttribute("currentPage", pageNo);
+            model.addAttribute("categories", category);
+
+        }else {
+            model.addAttribute("error", "Không thể lấy danh sách danh mục.");
+        }
         return "category";
     }//view all categories
 
@@ -382,11 +398,28 @@ public class AdminController {
         }
     }
 
+    //Order session
     @GetMapping("/orders")
-    public String showOrderPage(Model model){
-        model.addAttribute("orders", orderService.getAllOrder());
+    public String showOrderPage(Model model, @RequestParam(name = "pageNo", defaultValue ="1") Integer pageNo){
+        Page<OrderResponse> orderResponses = orderService.getAllOrdersPage(pageNo);
+        if(pageNo != null){
+            model.addAttribute("totalPage", orderResponses.getTotalPages());
+            model.addAttribute("currentPage", pageNo);
+            model.addAttribute("orders", orderResponses);
+
+        }else {
+            model.addAttribute("error", "Không thể lấy danh sách đơn hanng.");
+        }
         return "orderAdmin";
-    }
+    }//view all orders
+
+    @GetMapping("/orders/search")
+    public String searchOrders(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
+        List<OrderResponse> orderList = orderService.searchOrders(keyword);
+        model.addAttribute("orders", orderList);
+        model.addAttribute("keyword", keyword);
+        return "orderAdmin";
+    }//search order
 
     @GetMapping("/orders/delete/{id}")
     public String deleteOrder(@PathVariable int id) {

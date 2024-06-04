@@ -11,6 +11,10 @@ import com.kttkpm.FoodOrder.Repository.OrderRepository;
 import com.kttkpm.FoodOrder.Repository.UserRepository;
 import com.kttkpm.FoodOrder.Service.Imp.OrderServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -234,5 +238,32 @@ public class OrderService implements OrderServiceImp {
         } else {
             throw new RuntimeException("Order not found");
         }
+    }
+
+    public List<OrderResponse> searchOrders(String keyword) {
+        List<OrderEntity> order = orderRepository.searchUsers(keyword);
+        List<OrderResponse> list = new ArrayList<>();
+        for (OrderEntity u: order) {
+            OrderResponse orderResponse = new OrderResponse();
+            orderResponse.setId(u.getId());
+            orderResponse.setUsername(u.getUser().getUsername());
+            orderResponse.setOrderDate(u.getOrderDate());
+            orderResponse.setOrderFee(u.getOrderFee());
+            orderResponse.setOrderStatus(u.getOrderStatus());
+
+            list.add(orderResponse);
+        }
+        return list;
+    }
+    public Page<OrderResponse> getAllOrdersPage(Integer pageNo) {
+        int pageSize = 5; // Số sản phẩm trên mỗi trang
+        List<OrderResponse> allOrder = getAllOrder();
+        // Phân trang dữ liệu
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allOrder.size());
+
+        List<OrderResponse> sublist = allOrder.subList(start, end);
+        return new PageImpl<>(sublist, pageable, allOrder.size());
     }
 }
