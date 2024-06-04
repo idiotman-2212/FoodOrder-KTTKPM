@@ -5,7 +5,6 @@ import com.kttkpm.FoodOrder.Payload.Request.OrderRequest;
 import com.kttkpm.FoodOrder.Payload.Response.CategoryResponse;
 import com.kttkpm.FoodOrder.Payload.Response.OrderResponse;
 import com.kttkpm.FoodOrder.Payload.Response.ProductResponse;
-import com.kttkpm.FoodOrder.Payload.Response.UserResponse;
 import com.kttkpm.FoodOrder.Repository.CartRepository;
 import com.kttkpm.FoodOrder.Repository.OrderRepository;
 import com.kttkpm.FoodOrder.Repository.UserRepository;
@@ -265,5 +264,15 @@ public class OrderService implements OrderServiceImp {
 
         List<OrderResponse> sublist = allOrder.subList(start, end);
         return new PageImpl<>(sublist, pageable, allOrder.size());
+    }
+    @Override
+    public Page<OrderResponse> getAllPageOrderByIdUser(Integer pageNo, Integer id) {
+        int pageSize = 3;
+        List<OrderResponse> allOrders = getOrderByIdUser(id);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allOrders.size());
+        List<OrderResponse> sublist = allOrders.subList(start, end);
+        return new PageImpl<>(sublist, pageable, allOrders.size());
     }
 }

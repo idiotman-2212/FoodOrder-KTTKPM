@@ -150,4 +150,5 @@ public class UserService implements UserServiceImp {
         List<UserResponse> sublist = allUsers.subList(start, end);
         return new PageImpl<>(sublist, pageable, allUsers.size());
     }
+
 }

@@ -8,6 +8,7 @@ import com.kttkpm.FoodOrder.Payload.Response.OrderResponse;
 import com.kttkpm.FoodOrder.Service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -111,13 +112,18 @@ public class OrderController {
     }
 
     @GetMapping("/viewOrderHistory")
-    public String viewOrderHistory(Model model){
+    public String viewOrderHistory(Model model, @RequestParam(name = "pageNo", defaultValue ="1") Integer pageNo) {
         String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         UserEntity user = userService.findUserByEmail(currentUser);
-        List<OrderResponse> orderHistory = orderService.getOrderByIdUser(user.getId());
+        Page<OrderResponse> orderRe = orderService.getAllPageOrderByIdUser(pageNo,user.getId());
+        model.addAttribute("orders", orderRe);
+        model.addAttribute("totalPage", orderRe.getTotalPages());
+        model.addAttribute("currentPage", pageNo); // Trang hiện tại
 
         model.addAttribute("user", user);
-        model.addAttribute("orders", orderHistory);
+
+
         return "orderHistory";
     }
+
 }
