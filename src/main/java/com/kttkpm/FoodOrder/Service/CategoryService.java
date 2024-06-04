@@ -6,6 +6,10 @@ import com.kttkpm.FoodOrder.Payload.Response.CategoryResponse;
 import com.kttkpm.FoodOrder.Repository.CategoryRepository;
 import com.kttkpm.FoodOrder.Service.Imp.CategoryServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -87,4 +91,15 @@ public class CategoryService implements CategoryServiceImp {
         }
         return responseList;
     }
+    @Override
+    public Page<CategoryResponse> getAllCategoryPage(Integer pageNo) {
+        int pageSize = 3; // Số lượng danh mục trên mỗi trang
+        List<CategoryResponse> allCategories = getAllCategory(); // Lấy danh sách tất cả các danh mục
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize); // Tạo đối tượng phân trang
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allCategories.size());
+        List<CategoryResponse> sublist = allCategories.subList(start, end); // Lấy danh sách con của danh mục
+        return new PageImpl<>(sublist, pageable, allCategories.size()); // Trả về trang dữ liệu danh mục
+    }
+
 }

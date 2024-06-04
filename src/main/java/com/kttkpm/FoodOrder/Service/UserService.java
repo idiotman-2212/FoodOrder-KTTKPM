@@ -7,17 +7,15 @@ import com.kttkpm.FoodOrder.Payload.Response.UserResponse;
 import com.kttkpm.FoodOrder.Repository.RoleRepository;
 import com.kttkpm.FoodOrder.Repository.UserRepository;
 import com.kttkpm.FoodOrder.Service.Imp.UserServiceImp;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -131,5 +129,17 @@ public class UserService implements UserServiceImp {
             list.add(userResponse);
         }
         return list;
+    }
+    @Override
+    public Page<UserResponse> getAllUserPage(Integer pageNo) {
+        int pageSize = 3; // Số sản phẩm trên mỗi trang
+        List<UserResponse> allUser = getAllUser();
+        // Phân trang dữ liệu
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allUser.size());
+
+        List<UserResponse> sublist = allUser.subList(start, end);
+        return new PageImpl<>(sublist, pageable, allUser.size());
     }
 }

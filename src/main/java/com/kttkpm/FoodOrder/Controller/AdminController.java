@@ -1,6 +1,7 @@
 package com.kttkpm.FoodOrder.Controller;
 
 import com.kttkpm.FoodOrder.Entity.*;
+import com.kttkpm.FoodOrder.Helper.GlobalData;
 import com.kttkpm.FoodOrder.Payload.Request.ProductRequest;
 import com.kttkpm.FoodOrder.Payload.Request.SignUpRequest;
 import com.kttkpm.FoodOrder.Payload.Response.CategoryResponse;
@@ -73,9 +74,13 @@ public class AdminController {
 
     //Accounts
     @GetMapping("/users")
-    public String getAcc(Model model) {
-        model.addAttribute("users", userService.getAllUser());
+    public String getAcc(Model model, @RequestParam(name = "pageNo", defaultValue ="1") Integer pageNo) {
+        Page<UserResponse> userPage = userService.getAllUserPage(pageNo);
+        List<UserResponse> users = userPage.getContent();
+        model.addAttribute("users", users);
         model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("totalPage", userPage.getTotalPages());
+        model.addAttribute("currentPage", pageNo); // Trang hiện tại
         return "usersAdmin";
     }
 
@@ -191,8 +196,11 @@ public class AdminController {
 
     //Categories session
     @GetMapping("/categories")
-    public String getCat(Model model) {
-        model.addAttribute("categories", categoryService.getAllCategory());
+    public String getCat(Model model, @RequestParam(name = "pageNo", defaultValue ="1") Integer pageNo) {
+        Page<CategoryResponse> categoryRe = categoryService.getAllCategoryPage(pageNo);
+        model.addAttribute("categories", categoryRe);
+        model.addAttribute("totalPage", categoryRe.getTotalPages());
+        model.addAttribute("currentPage", pageNo); // Trang hiện tại
         return "category";
     }//view all categories
 
@@ -383,8 +391,11 @@ public class AdminController {
     }
 
     @GetMapping("/orders")
-    public String showOrderPage(Model model){
-        model.addAttribute("orders", orderService.getAllOrder());
+    public String showOrderPage(Model model, @RequestParam(name = "pageNo", defaultValue ="1") Integer pageNo) {
+        Page<OrderResponse> orderRe = orderService.getAllOrderPage(pageNo);
+        model.addAttribute("orders", orderRe);
+        model.addAttribute("totalPage", orderRe.getTotalPages());
+        model.addAttribute("currentPage", pageNo); // Trang hiện tại
         return "orderAdmin";
     }
 

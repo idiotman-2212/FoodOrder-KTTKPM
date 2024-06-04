@@ -5,12 +5,15 @@ import com.kttkpm.FoodOrder.Payload.Request.OrderRequest;
 import com.kttkpm.FoodOrder.Payload.Response.CategoryResponse;
 import com.kttkpm.FoodOrder.Payload.Response.OrderResponse;
 import com.kttkpm.FoodOrder.Payload.Response.ProductResponse;
-import com.kttkpm.FoodOrder.Payload.Response.UserResponse;
 import com.kttkpm.FoodOrder.Repository.CartRepository;
 import com.kttkpm.FoodOrder.Repository.OrderRepository;
 import com.kttkpm.FoodOrder.Repository.UserRepository;
 import com.kttkpm.FoodOrder.Service.Imp.OrderServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -234,5 +237,25 @@ public class OrderService implements OrderServiceImp {
         } else {
             throw new RuntimeException("Order not found");
         }
+    }
+    @Override
+    public Page<OrderResponse> getAllOrderPage(Integer pageNo) {
+        int pageSize = 3;
+        List<OrderResponse> allOrders = getAllOrder();
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allOrders.size());
+        List<OrderResponse> sublist = allOrders.subList(start, end);
+        return new PageImpl<>(sublist, pageable, allOrders.size());
+    }
+    @Override
+    public Page<OrderResponse> getAllPageOrderByIdUser(Integer pageNo, Integer id) {
+        int pageSize = 3;
+        List<OrderResponse> allOrders = getOrderByIdUser(id);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allOrders.size());
+        List<OrderResponse> sublist = allOrders.subList(start, end);
+        return new PageImpl<>(sublist, pageable, allOrders.size());
     }
 }
