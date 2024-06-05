@@ -33,8 +33,9 @@ public class ProductService implements ProductServiceImp {
     private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
-    @Autowired
-    private ProductConverter productConverter;
+
+    // Sử dụng ProductConverter để thực hiện chuyển đổi
+    private final ProductConverter productConverter = ProductConverter.getInstance();
 
     @Value("${root.folder}")
     private String rootFolder;
@@ -191,17 +192,29 @@ public class ProductService implements ProductServiceImp {
 
     @Override
     public List<ProductResponse> getProductByName(String productName) {
-        List<ProductEntity> products = productRepository.findByNameContainingIgnoreCase(productName);
-        return products.stream()
-                .map(ProductConverter::toProductResponse)
-                .collect(Collectors.toList());
+        List<ProductEntity> productList = productRepository.findByNameContaining(productName);
+        List<ProductResponse> responseList = new ArrayList<>();
+
+        for (ProductEntity item : productList) {
+            ProductResponse productResponse = new ProductResponse();
+            productResponse.setId(item.getId());
+            productResponse.setName(item.getName());
+            productResponse.setImage(item.getImage());
+            productResponse.setDescription(item.getDescription());
+            productResponse.setPrice(item.getPrice());
+            productResponse.setCreateDate(item.getCreateDate());
+
+            responseList.add(productResponse);
+        }
+
+        return responseList;
     }
 
     @Override
     public List<ProductResponse> searchProducts(String keyword) {
         List<ProductEntity> products = productRepository.searchProducts(keyword);
         return products.stream()
-                .map(ProductConverter::toProductResponse)
+                .map(productConverter::toProductResponse)
                 .collect(Collectors.toList());
     }
     public List<ProductEntity> getAllProductByCategoryId(int id) {

@@ -5,8 +5,21 @@ import com.kttkpm.FoodOrder.Payload.Response.ProductResponse;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductConverter  {
-    public static ProductResponse toProductResponse(ProductEntity productEntity) {
+public class ProductConverter {
+    // Đối tượng instance duy nhất của ProductConverter
+    private static final ProductConverter instance = new ProductConverter();
+
+    // Constructor private để ngăn việc tạo instance từ bên ngoài lớp
+    private ProductConverter() {
+        // Khởi tạo ProductConverter
+    }
+
+    // Phương thức để lấy instance duy nhất của ProductConverter
+    public static ProductConverter getInstance() {
+        return instance;
+    }
+
+    public ProductResponse toProductResponse(ProductEntity productEntity) {
         if (productEntity == null) {
             return null;
         }
@@ -23,7 +36,8 @@ public class ProductConverter  {
 
         return productResponse;
     }
-    public static ProductEntity toProductEntity(ProductResponse productResponse) {
+
+    public ProductEntity toProductEntity(ProductResponse productResponse) {
         if (productResponse == null) {
             return null;
         }
@@ -40,5 +54,4 @@ public class ProductConverter  {
 
         return productEntity;
     }
-
 }

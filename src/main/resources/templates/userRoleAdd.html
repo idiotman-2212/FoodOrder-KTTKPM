@@ -14,7 +14,7 @@
   <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}" />
 
 
-  <title>User Infor</title>
+  <title>User Information</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" >
@@ -69,7 +69,6 @@
   <form th:action="@{/users/add}" method="post" th:object="${userDTO}" enctype="multipart/form-data">
     <div class="row">
       <div class="col-sm-5">
-        <input type="hidden" name="id" th:field="*{id}">
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" class="form-control" required th:field="*{username}" name="username" id="username"

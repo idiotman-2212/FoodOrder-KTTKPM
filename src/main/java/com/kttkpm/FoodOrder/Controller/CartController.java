@@ -38,13 +38,13 @@ public class CartController {
         List<CartResponse> cartItems = cartService.getCartByUserId(userId.getId());
         int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
         double total = cartItems.stream().mapToDouble(item -> item.getTotalCostProduct()).sum();
-        model.addAttribute("cart", cartItems);
+
         model.addAttribute("cartCount", cartCount);
+        model.addAttribute("cart", cartItems);
         model.addAttribute("total", total);
 
-        return "cart"; // Tên của view
+        return "cart";
     }
-
 
     @GetMapping("/addToCart/{id}")
     public String addToCart(@PathVariable int id, Model model) {

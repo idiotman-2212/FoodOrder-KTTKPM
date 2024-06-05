@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     List<UserEntity> searchUsers(@Param("keyword") String keyword);
     UserEntity findByEmail(String email);
     UserEntity findByUsername(String username);
+    UserEntity findByResetToken(String resetToken);
+
 }

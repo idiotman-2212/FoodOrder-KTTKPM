@@ -1,5 +1,6 @@
 package com.kttkpm.FoodOrder.Controller;
 
+import com.kttkpm.FoodOrder.Entity.OrderEntity;
 import com.kttkpm.FoodOrder.Entity.ProductEntity;
 import com.kttkpm.FoodOrder.Entity.UserEntity;
 import com.kttkpm.FoodOrder.Payload.Request.OrderRequest;
@@ -7,11 +8,14 @@ import com.kttkpm.FoodOrder.Payload.Response.CartResponse;
 import com.kttkpm.FoodOrder.Payload.Response.OrderResponse;
 import com.kttkpm.FoodOrder.Service.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +48,7 @@ public class OrderController {
         model.addAttribute("address", user.getAddress());
         model.addAttribute("cartCount", cartCount);
         model.addAttribute("total", total);
+        model.addAttribute("orderRequest", new OrderRequest());
         return "checkout";
     }
 
@@ -65,30 +70,44 @@ public class OrderController {
         UserEntity user = userService.findUserByEmail(currentUser);
         request.setUser(user);
 
-        List<OrderResponse> orderResponses = orderService.getOrderByIdUser(user.getId());
-        OrderResponse response = orderResponses.isEmpty() ? null : orderResponses.get(0);
+/*        List<OrderResponse> orderResponses = orderService.getOrderByIdUser(user.getId());
+        OrderResponse response = orderResponses.isEmpty() ? null : orderResponses.get(0);*/
+        OrderResponse response = orderService.updateOrderDesc(user.getId(), request.getOrderDesc());
         model.addAttribute("user", user.getUsername());
         model.addAttribute("order", response);
         return "orderPlaced";
     }
 
     //Thanh toan thong qua VN-Pay
-   @GetMapping("/checkout/paynow")
-    public String paynow(@ModelAttribute OrderRequest request, Model model){
+   @PostMapping("/checkout/paynow")
+    public String paynowVNPay(@ModelAttribute OrderRequest request, Model model){
         String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         UserEntity user = userService.findUserByEmail(currentUser);
         request.setUser(user);
 
+       List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+       int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+
         OrderResponse response = orderService.placeOrder(request);
         model.addAttribute("user", user.getUsername());
+        model.addAttribute("cartCount", cartCount);
         model.addAttribute("order", response);
         return "createOrder";
     }
+
     // Chuyển hướng người dùng đến cổng thanh toán VNPAY
-    @PostMapping("/checkout/orderSuccess")
-    public String submidOrder(Model model, @ModelAttribute OrderRequest orderRequest, HttpServletRequest request){
-        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-        String vnpayUrl = vnPayService.createOrder(request, orderRequest.getOrderFee(), orderRequest.getOrderDesc(), baseUrl);
+    @PostMapping("/checkout/submitOrderVnpay")
+    public String submitOrderVNPay(@ModelAttribute OrderRequest request, Model model, HttpServletRequest httpServletRequest) {
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+        request.setUser(user);
+
+        OrderResponse response = orderService.updateOrderDesc(user.getId(), request.getOrderDesc());
+        model.addAttribute("user", user.getUsername());
+        model.addAttribute("order", response);
+
+        String baseUrl = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort();
+        String vnpayUrl = vnPayService.createOrder(httpServletRequest, request.getOrderFee(), request.getOrderDesc(), baseUrl);
         return "redirect:" + vnpayUrl;
     }
 
@@ -111,12 +130,19 @@ public class OrderController {
     }
 
     @GetMapping("/viewOrderHistory")
-    public String viewOrderHistory(Model model){
+    public String viewOrderHistory(Model model, @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo){
         String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         UserEntity user = userService.findUserByEmail(currentUser);
         List<OrderResponse> orderHistory = orderService.getOrderByIdUser(user.getId());
 
+        /*Page<OrderResponse> orderHistory = orderService.getAllOrdersPage(pageNo);*/
+
+        List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+        double total = cartItems.stream().mapToDouble(item -> item.getTotalCostProduct()).sum();
+
         model.addAttribute("user", user);
+        model.addAttribute("cartCount", cartCount);
         model.addAttribute("orders", orderHistory);
         return "orderHistory";
     }

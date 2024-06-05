@@ -75,7 +75,7 @@
                 <!-- Card -->
                 <div class="card wish-list pb-1">
                     <div class="card-body">
-                        <form th:action="@{/checkout/submitOrder}" method="post">
+                        <form th:action="@{/checkout/submitOrder}" method="post" th:object="${order}">
                         <h5 class="mb-2">Order Details</h5>
                         <!-- Order Information -->
                         <div class="md-form md-outline mb-0 mb-lg-4">
@@ -86,10 +86,10 @@
                             <label for="orderStatus">Order Status</label>
                             <input type="text" id="orderStatus" th:value="${order.orderStatus}" required class="form-control mb-0 mb-lg-2" readonly>
                         </div>
-                        <div class="md-form md-outline mb-0 mb-lg-4">
-                            <label for="orderDesc">Order Description</label>
-                            <input type="text" id="orderDesc" th:value="${order.orderDesc}" required class="form-control mb-0 mb-lg-2" readonly>
-                        </div>
+                            <div class="md-form md-outline mb-0 mb-lg-4">
+                                <label for="orderDesc">Order Description</label>
+                                <input type="text" name="orderDesc" id="orderDesc" th:field="*{orderDesc}" required class="form-control mb-0 mb-lg-2">
+                            </div>
                         <!-- Products List -->
                         <h5 class="mt-2">Products</h5>
                         <div th:each="product : ${order.products}">

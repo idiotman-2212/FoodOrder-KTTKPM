@@ -95,6 +95,7 @@ public class OrderService implements OrderServiceImp {
         order.setUser(user);
         order.setOrderDate(new Date());
         order.setOrderStatus(OrderStatus.PENDING); // Setting default order status to PENDING
+        order.setOrderDesc(request.getOrderDesc());
         order.setProducts(cartItems.stream().map(CartEntity::getProduct).collect(Collectors.toList()));
         order.setOrderFee(cartItems.stream().mapToDouble(cart -> cart.getProduct().getPrice() * cart.getQuantity()).sum());
         OrderEntity savedOrder = orderRepository.save(order);
@@ -265,5 +266,32 @@ public class OrderService implements OrderServiceImp {
 
         List<OrderResponse> sublist = allOrder.subList(start, end);
         return new PageImpl<>(sublist, pageable, allOrder.size());
+    }
+
+    public OrderResponse updateOrderDesc(int userId, String orderDesc) {
+        // Fetch the latest order for the user to update the description
+        OrderEntity order = orderRepository.findTopByUserIdOrderByOrderDateDesc(userId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setOrderDesc(orderDesc);
+        OrderEntity updatedOrder = orderRepository.save(order);
+        return new OrderResponse(
+                order.getId(),
+                order.getUser().getId(),
+                order.getUser().getUsername(),
+                order.getOrderDate(),
+                order.getOrderDesc(),
+                order.getOrderFee(),
+                order.getOrderStatus(), // Add order status to response
+                order.getProducts().stream().map(product -> new ProductResponse(
+                        product.getId(),
+                        product.getName(),
+                        product.getImage(),
+                        product.getPrice(),
+                        product.getDescription(),
+                        product.getQuantity(),
+                        product.getCreateDate(),
+                        new CategoryResponse(product.getCategory().getId(), product.getCategory().getName())
+                )).collect(Collectors.toList())
+        );
     }
 }

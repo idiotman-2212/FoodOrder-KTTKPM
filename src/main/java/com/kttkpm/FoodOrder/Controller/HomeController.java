@@ -4,6 +4,7 @@ import com.kttkpm.FoodOrder.Entity.RoleEntity;
 import com.kttkpm.FoodOrder.Entity.UserEntity;
 import com.kttkpm.FoodOrder.Helper.GlobalData;
 import com.kttkpm.FoodOrder.Payload.Request.SignUpRequest;
+import com.kttkpm.FoodOrder.Payload.Response.CartResponse;
 import com.kttkpm.FoodOrder.Payload.Response.ProductResponse;
 import com.kttkpm.FoodOrder.Payload.Response.UserResponse;
 import com.kttkpm.FoodOrder.Repository.RoleRepository;
@@ -33,6 +34,8 @@ public class HomeController {
     @Autowired
     RoleRepository  roleRepository;
     @Autowired
+    private CartService cartService;
+    @Autowired
     CategoryService categoryService;
     @Autowired
     ProductService productService;
@@ -46,8 +49,9 @@ public class HomeController {
         }else {
             model.addAttribute("username", "Guest");
         }
-
-        model.addAttribute("cartCount", GlobalData.cart.size());
+        List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+        model.addAttribute("cartCount", cartCount);
         return "index";
     } //index
 
@@ -55,6 +59,9 @@ public class HomeController {
     public String welcome(Model model) {
         String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         UserEntity user = userService.findUserByEmail(currentUser);
+        List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+        model.addAttribute("cartCount", cartCount);
         model.addAttribute("username", user.getUsername());
         return "users";
     }//show user page
@@ -68,8 +75,9 @@ public class HomeController {
             UserEntity user = userService.findUserByEmail(currentUsername);
             if (user != null) {
                 currentUser.setId(user.getId());
+                currentUser.setUsername(user.getUsername());
                 currentUser.setEmail(user.getEmail());
-                currentUser.setPassword(""); // Trường hợp này không nên set password vào DTO hiển thị
+                currentUser.setPassword("");
                 currentUser.setPhone(user.getPhone());
                 currentUser.setAddress(user.getAddress());
             } else {
@@ -77,8 +85,12 @@ public class HomeController {
                 return "403";
             }
         }
+        List<CartResponse> cartItems = cartService.getCartByUserId(currentUser.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+
+        model.addAttribute("cartCount", cartCount);
         model.addAttribute("userDTO", currentUser);
-        return "userRoleAdd"; // Sửa tên view thành userRoleEdit nếu đây là trang chỉnh sửa thông tin người dùng
+        return "userRoleAdd";
     }
 
     @PostMapping("/users/add")
@@ -87,14 +99,13 @@ public class HomeController {
         String currentUsername = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         UserEntity user = userService.findUserByEmail(currentUsername);
         if (user != null) {
-            // Cập nhật thông tin người dùng
+            user.setUsername(userResponse.getUsername());
             user.setEmail(userResponse.getEmail());
             user.setPhone(userResponse.getPhone());
             user.setAddress(userResponse.getAddress());
-
-            // Lưu thông tin người dùng đã cập nhật
+            user.setPassword(passwordEncoder.encode(userResponse.getPassword()));
             userRepository.save(user);
-            return "redirect:/users"; // Hoặc chuyển hướng đến trang thông báo thành công
+            return "redirect:/users";
         } else {
             model.addAttribute("error", "Người dùng không tồn tại");
             return "403";
@@ -105,11 +116,16 @@ public class HomeController {
     @GetMapping("/shop")
     public String shop(Model model, @RequestParam(name = "pageNo", defaultValue ="1") Integer pageNo ){
 
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+
+        List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();//model.addAttribute("cartCount", cartCount);
         Page<ProductResponse> products = productService.getAllProductsPage(pageNo);
         if(pageNo != null){
             model.addAttribute("totalPage", products.getTotalPages());
             model.addAttribute("currentPage", pageNo);
-            model.addAttribute("cartCount", GlobalData.cart.size());
+            model.addAttribute("cartCount", cartCount);
             model.addAttribute("categories", categoryService.getAllCategory());
             model.addAttribute("products", products.getContent());
         }
@@ -119,7 +135,12 @@ public class HomeController {
 
     @GetMapping("/shop/category/{id}")
     public String shopByCat(@PathVariable int id, Model model){
-        model.addAttribute("cartCount", GlobalData.cart.size());
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+
+        List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+        model.addAttribute("cartCount", cartCount);
         model.addAttribute("categories", categoryService.getAllCategory());
         model.addAttribute("products", productService.getAllProductByCategoryId(id));
         return "shop";
@@ -127,7 +148,12 @@ public class HomeController {
 
     @GetMapping("/shop/viewproduct/{id}")
     public String viewProduct(@PathVariable int id, Model model){
-        model.addAttribute("cartCount", GlobalData.cart.size());
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+
+        List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+        model.addAttribute("cartCount", cartCount);
         model.addAttribute("product", productService.getProductById(id));
         return "viewProduct";
     } //view product Details
@@ -139,21 +165,45 @@ public class HomeController {
 
     @GetMapping("/blog")
     public String blog(Model model){
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+
+        List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+        model.addAttribute("cartCount", cartCount);
         return "blog";
     }// view blog
 
     @GetMapping("/blog-detail")
     public String blogDetail(Model model){
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+
+        List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+        model.addAttribute("cartCount", cartCount);
         return "blog-detail";
     }// view blog detail
 
     @GetMapping("/about")
     public String about(Model model){
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+
+        List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+        model.addAttribute("cartCount", cartCount);
         return "about";
     }// view about
 
     @GetMapping("/contact")
     public String contact(Model model){
+        String currentUser = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        UserEntity user = userService.findUserByEmail(currentUser);
+
+        List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
+        model.addAttribute("cartCount", cartCount);
         return "contact";
     }// view contact
 
