@@ -7,6 +7,18 @@
 ![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/f22766ed-3980-4d2a-b39a-51fe6fc06170)
 ![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/5ee146e3-19ef-4d3f-9b80-da917122d51b)
 
+- Design pattern dùng trong dự án: Singleton, Factory
+- Singleton:
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/b6ae1b80-fd53-4b6c-87cb-27dff72240ab)
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/35ca9feb-0940-49b2-a482-2b24d6230c6c)
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/c7de18bb-ed0c-4243-a14e-6324b79171af)
+
+- Factory:
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/df48565c-93b1-4d07-a295-aac9042e385f)
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/7fa539be-e6ea-43b2-9c0f-9779e06b6c42)
+
+
+
 
 
 - Trang người dùng
