@@ -47,7 +47,7 @@ public class PaymentService implements PaymentServiceImp {
         // Gửi sự kiện Payment Successful đến Kafka
         PaymentResponse paymentResponse = new PaymentResponse();
         paymentResponse.setOrderId(idOrder);
-        paymentResponse.setPayed(isPayed);
+        paymentResponse.setIsPayed(isPayed);
         paymentResponse.setPaymentStatus(paymentStatus);
 
         return true;

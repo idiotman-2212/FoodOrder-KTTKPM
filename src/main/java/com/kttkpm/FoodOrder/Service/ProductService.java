@@ -37,8 +37,8 @@ public class ProductService implements ProductServiceImp {
     // Sử dụng ProductConverter để thực hiện chuyển đổi
     private final ProductConverter productConverter = ProductConverter.getInstance();
 
-    @Value("${root.folder}")
-    private String rootFolder;
+//    @Value("${root.folder}")
+    private String rootFolder="../resources/static/productImages";
 
     @Override
     public void insertProduct(ProductRequest productRequest) {

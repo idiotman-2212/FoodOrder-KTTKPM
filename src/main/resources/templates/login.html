@@ -80,7 +80,7 @@
           <label for="password">Password</label>
           <input type="password" class="form-control form-control-lg" placeholder="Password" data-type="password" name="password" id="password">
         </div>
-        <div th:if="${param.error}" class="alert alert-error text-danger">
+        <div th:if="${error}" class="alert alert-error text-danger">
           Invalid email or password.
         </div>
         <input type="submit" id="btn-login" value="Login" class="btn btn-primary btn-block">

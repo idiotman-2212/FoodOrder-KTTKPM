@@ -1,6 +1,7 @@
 package com.kttkpm.FoodOrder.Helper;
 
 import com.kttkpm.FoodOrder.Entity.CartEntity;
+import com.kttkpm.FoodOrder.Payload.Request.CartRequest;
 import com.kttkpm.FoodOrder.Payload.Response.CartResponse;
 import org.springframework.stereotype.Component;
 
@@ -29,20 +30,14 @@ public class CartConverter {
         return cartResponse;
     }
 
-    public static CartEntity toCartEntity(CartResponse cartResponse) {
-        if (cartResponse == null) {
+    public static CartEntity toCartEntity(CartRequest cartRequest) {
+        if (cartRequest == null) {
             return null;
         }
 
         CartEntity cartEntity = new CartEntity();
-        cartEntity.setId(cartResponse.getId());
-//        cartEntity.setUser(cartResponse.getUserId());
-//        // Chuyển đổi tập hợp các OrderResponse thành tập hợp các OrderEntity
-//        cartEntity.setOrders(
-//                cartResponse.getOrderResponseSet().stream()
-//                        .map(OrderConverter::toOrderEntity) // Sử dụng converter của OrderResponse
-//                        .collect(Collectors.toSet())
-//        );
+        cartEntity.setId(cartRequest.getId());
+
 
         return cartEntity;
     }
