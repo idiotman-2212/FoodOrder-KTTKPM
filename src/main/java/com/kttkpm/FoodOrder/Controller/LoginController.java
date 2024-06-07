@@ -8,7 +8,6 @@ import com.kttkpm.FoodOrder.Repository.UserRepository;
 import com.kttkpm.FoodOrder.Service.EmailService;
 import com.kttkpm.FoodOrder.Service.UserService;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Controller
-@Slf4j
 public class LoginController {
     @Autowired
     private UserRepository userRepository;
@@ -43,7 +41,6 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute(name = "loginForm") SignUpRequest signUpRequest, Model m) {
-        log.info("Start login");
         UserEntity user = userRepository.findByEmail(signUpRequest.getEmail());
 
         if (user != null && passwordEncoder.matches(signUpRequest.getPassword(), user.getPassword())) {
@@ -65,29 +62,21 @@ public class LoginController {
     @PostMapping("/register")
     public String processRegistrationForm(@ModelAttribute("signupRequest") @Valid SignUpRequest signUpRequest,
                                           BindingResult bindingResult, Model model) {
-        log.info("Register new user");
         if (bindingResult.hasErrors()) {
-            log.info("Errors found");
             return "register";
         }
         signUpRequest.setIdRole(2);
 
         boolean registrationSuccess = userService.insertUser(signUpRequest);
         if (registrationSuccess) {
-            log.info("User registered successfully");
             return "redirect:/login";
         } else {
-            log.info("User registration failed");
             model.addAttribute("error", "Registration failed. Please try again.");
             return "register";
         }
     }
-<<<<<<< HEAD
     //Quên mật khẩu
     @GetMapping("/forgotpassword")
-=======
-    @GetMapping("/forgot-password")
->>>>>>> origin/tai-dev
     public String forgotPass(Model model) {
         return "forgotpassword";
     }

@@ -8,17 +8,14 @@ import org.springframework.stereotype.Component;
 public class ProductConverter {
     // Đối tượng instance duy nhất của ProductConverter
     private static final ProductConverter instance = new ProductConverter();
-
     // Constructor private để ngăn việc tạo instance từ bên ngoài lớp
     private ProductConverter() {
         // Khởi tạo ProductConverter
     }
-
     // Phương thức để lấy instance duy nhất của ProductConverter
     public static ProductConverter getInstance() {
         return instance;
     }
-
     public ProductResponse toProductResponse(ProductEntity productEntity) {
         if (productEntity == null) {
             return null;

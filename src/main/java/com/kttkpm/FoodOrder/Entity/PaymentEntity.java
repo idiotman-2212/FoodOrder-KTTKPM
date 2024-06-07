@@ -26,6 +26,7 @@ public class PaymentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private OrderEntity order;
-
+    private String transactionId;
+    private String paymentAmount;
 }
 

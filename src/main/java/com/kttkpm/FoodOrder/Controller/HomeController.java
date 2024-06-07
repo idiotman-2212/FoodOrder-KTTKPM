@@ -112,7 +112,7 @@ public class HomeController {
         }
     }
 
-
+    //viewProduct
     @GetMapping("/shop")
     public String shop(Model model, @RequestParam(name = "pageNo", defaultValue ="1") Integer pageNo ){
 
@@ -120,7 +120,7 @@ public class HomeController {
         UserEntity user = userService.findUserByEmail(currentUser);
 
         List<CartResponse> cartItems = cartService.getCartByUserId(user.getId());
-        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();//model.addAttribute("cartCount", cartCount);
+        int cartCount = cartItems.stream().mapToInt(CartResponse::getQuantity).sum();
         Page<ProductResponse> products = productService.getAllProductsPage(pageNo);
         if(pageNo != null){
             model.addAttribute("totalPage", products.getTotalPages());
@@ -130,8 +130,7 @@ public class HomeController {
             model.addAttribute("products", products.getContent());
         }
         return "shop";
-    }
-    //xem tất cả sản phầm và phân trang
+    }//xem tất cả sản phầm và phân trang
 
     @GetMapping("/shop/category/{id}")
     public String shopByCat(@PathVariable int id, Model model){

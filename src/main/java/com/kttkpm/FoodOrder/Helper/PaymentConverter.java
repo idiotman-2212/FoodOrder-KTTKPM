@@ -1,6 +1,7 @@
 package com.kttkpm.FoodOrder.Helper;
 
 import com.kttkpm.FoodOrder.Entity.PaymentEntity;
+import com.kttkpm.FoodOrder.Entity.PaymentStatus;
 import com.kttkpm.FoodOrder.Payload.Response.PaymentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,12 +16,8 @@ public class PaymentConverter {
     public PaymentResponse toPaymentResponse(PaymentEntity paymentEntity) {
         PaymentResponse paymentResponse = new PaymentResponse();
         paymentResponse.setId(paymentEntity.getId());
-        paymentResponse.setPaymentStatus(paymentEntity.getPaymentStatus());
-<<<<<<< HEAD
-        paymentResponse.setPayed(paymentEntity.getIsPayed());
-=======
-        paymentResponse.setIsPayed(paymentEntity.getPayed());
->>>>>>> origin/tai-dev
+        paymentResponse.setPaymentStatus(paymentEntity.getPaymentStatus().getStatus());
+        paymentResponse.setIsPayed(paymentEntity.getIsPayed());
 //        paymentResponse.setOrderId(paymentEntity.getOrderId());
 //        paymentResponse.setUserId(paymentEntity.getUserId());
         return paymentResponse;
@@ -29,12 +26,8 @@ public class PaymentConverter {
     public PaymentEntity toPaymentEntity(PaymentResponse paymentResponse) {
         PaymentEntity entity = new PaymentEntity();
         entity.setId(paymentResponse.getId());
-<<<<<<< HEAD
-        entity.setIsPayed(paymentResponse.getPayed());
-=======
-        entity.setPayed(paymentResponse.getIsPayed());
->>>>>>> origin/tai-dev
-        entity.setPaymentStatus(paymentResponse.getPaymentStatus());
+        entity.setIsPayed(paymentResponse.getIsPayed());
+        entity.setPaymentStatus(PaymentStatus.IN_PROGRESS);
 //        entity.setUserId(paymentResponse.getUserId());
 //        entity.setOrderId(paymentResponse.getOrderId());
 

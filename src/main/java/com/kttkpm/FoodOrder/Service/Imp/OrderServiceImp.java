@@ -2,6 +2,7 @@ package com.kttkpm.FoodOrder.Service.Imp;
 
 import com.kttkpm.FoodOrder.Entity.OrderEntity;
 import com.kttkpm.FoodOrder.Payload.Response.OrderResponse;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -20,4 +21,5 @@ public interface OrderServiceImp {
     List<OrderResponse> getOrderByIdUser(int idUser);
 
     void placeOrder(int userId);
+    Page<OrderResponse> getAllPageOrderByIdUser(Integer pageNo, Integer id);
 }

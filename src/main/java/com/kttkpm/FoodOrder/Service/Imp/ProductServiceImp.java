@@ -12,14 +12,11 @@ import java.util.Optional;
 
 public interface ProductServiceImp {
     //boolean insertProduct(String name, MultipartFile file, double price, int quantity,int idCategory, String description) throws IOException;
-
     void insertProduct(ProductRequest productRequest);
     List<ProductResponse> getAllProduct();
     ProductResponse getProductById(int id);
     boolean deleteProductById(int idProduct);
-    boolean updateProductById(int idProduct, String name,
-                              MultipartFile file, String description, double price,
-                              int quantity,int idCategory) throws IOException;
+    boolean updateProductById(int idProduct, ProductRequest productRequest) throws IOException;
     List<ProductResponse> getProductByName(String productName);
     List<ProductResponse> searchProducts(String keyword);
     List<ProductEntity> getAllProductByCategoryId(int id);

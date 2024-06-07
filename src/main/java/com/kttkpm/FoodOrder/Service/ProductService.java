@@ -33,13 +33,10 @@ public class ProductService implements ProductServiceImp {
     private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
-
     // Sử dụng ProductConverter để thực hiện chuyển đổi
     private final ProductConverter productConverter = ProductConverter.getInstance();
-
-//    @Value("${root.folder}")
-    private String rootFolder="../resources/static/productImages";
-
+    @Value("${root.folder}")
+    private String rootFolder;
     @Override
     public void insertProduct(ProductRequest productRequest) {
         try {
@@ -155,33 +152,36 @@ public class ProductService implements ProductServiceImp {
     }
 
     @Override
-    public boolean updateProductById(int idProduct, String name, MultipartFile file, String description, double price, int quanity, int idCategory) throws IOException {
+    public boolean updateProductById(int idProduct, ProductRequest productRequest) throws IOException {
         Optional<ProductEntity> productOptional = productRepository.findById(idProduct);
-        List<ProductResponse> responseList = new ArrayList<>();
 
         if (productOptional.isPresent()) {
             ProductEntity productEntity = productOptional.get();
-
             String oldImage = productEntity.getImage();
             if (oldImage != null) {
                 Files.deleteIfExists(Paths.get(rootFolder, oldImage));
             }
 
-            String newImage = file.getOriginalFilename();
+            String newImage = productRequest.getFile().getOriginalFilename();
             Path newPathImageCopy = Paths.get(rootFolder, newImage);
-            Files.copy(file.getInputStream(), newPathImageCopy, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(productRequest.getFile().getInputStream(), newPathImageCopy, StandardCopyOption.REPLACE_EXISTING);
 
-            productEntity.setName(name);
-            productEntity.setImage(file.getOriginalFilename());
-            productEntity.setPrice(price);
-            productEntity.setQuantity(quanity);
-            productEntity.setDescription(description);
+            productEntity.setName(productRequest.getName());
+            productEntity.setImage(newImage);
+            productEntity.setPrice(productRequest.getPrice());
+            productEntity.setQuantity(productRequest.getQuantity());
+            productEntity.setDescription(productRequest.getDescription());
+            productEntity.setCreateDate(new Date()); // Set ngày tạo mới khi cập nhật
 
-            CategoryEntity categoryEntity = new CategoryEntity();
-            categoryEntity.setId(idCategory);
+            // Tìm hoặc tạo mới danh mục sản phẩm
+            CategoryEntity categoryEntity = categoryRepository.findByName(productRequest.getCategoryName());
+            if (categoryEntity == null) {
+                categoryEntity = new CategoryEntity();
+                categoryEntity.setName(productRequest.getCategoryName());
+                categoryEntity = categoryRepository.save(categoryEntity);
+            }
+
             productEntity.setCategory(categoryEntity);
-
-            productEntity.setCreateDate(new Date());
 
             productRepository.save(productEntity);
             return true;

@@ -9,13 +9,8 @@ import java.util.List;
 
 @Entity(name = "carts")
 @Data
-<<<<<<< HEAD
 @NoArgsConstructor
 @AllArgsConstructor
-=======
-@AllArgsConstructor
-@NoArgsConstructor
->>>>>>> origin/tai-dev
 public class CartEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +24,7 @@ public class CartEntity {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<OrderEntity> orders;
 
-<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name = "product_id")
     private ProductEntity product;
-=======
-
->>>>>>> origin/tai-dev
 }

@@ -2,14 +2,9 @@ package com.kttkpm.FoodOrder.Payload.Response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
 
 import java.util.Date;
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+
 public class FavouriteResponse {
     private int id;
 
@@ -27,5 +22,51 @@ public class FavouriteResponse {
 
     private Date createDate;
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public UserResponse getUserResponse() {
+        return userResponse;
+    }
+
+    public void setUserResponse(UserResponse userResponse) {
+        this.userResponse = userResponse;
+    }
+
+    public ProductResponse getProductResponse() {
+        return productResponse;
+    }
+
+    public void setProductResponse(ProductResponse productResponse) {
+        this.productResponse = productResponse;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 }

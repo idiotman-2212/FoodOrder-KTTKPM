@@ -1,9 +1,11 @@
 package com.kttkpm.FoodOrder.Service;
 
+import com.kttkpm.FoodOrder.Entity.OrderEntity;
 import com.kttkpm.FoodOrder.Entity.PaymentEntity;
 import com.kttkpm.FoodOrder.Entity.PaymentStatus;
 import com.kttkpm.FoodOrder.Helper.OrderConverter;
 import com.kttkpm.FoodOrder.Helper.PaymentConverter;
+import com.kttkpm.FoodOrder.Payload.Request.PaymentRequest;
 import com.kttkpm.FoodOrder.Payload.Response.PaymentResponse;
 import com.kttkpm.FoodOrder.Repository.OrderRepository;
 import com.kttkpm.FoodOrder.Repository.PaymentRepository;
@@ -34,24 +36,22 @@ public class PaymentService implements PaymentServiceImp {
     }
     // Trong phương thức thực hiện thanh toán
     @Override
-    public boolean createPayment(int idOrder,int idUser, boolean isPayed, PaymentStatus paymentStatus) {
-        PaymentEntity paymentEntity = new PaymentEntity();
-//        paymentEntity.setOrderId(idOrder);
-//        paymentEntity.setUserId(idUser);
-        paymentEntity.setIsPayed(isPayed);
-        paymentEntity.setPaymentStatus(paymentStatus);
-        paymentEntity.setPaymentDate(new Date());
+    public PaymentResponse createPayment(PaymentRequest paymentRequest) {
+        OrderEntity order = orderRepository.findById(paymentRequest.getOrderId()).orElse(null);
 
-        paymentRepository.save(paymentEntity);
+        PaymentEntity payment = new PaymentEntity();
+        payment.setIsPayed(paymentRequest.getIsPayed());
+        payment.setPaymentStatus(PaymentStatus.valueOf(paymentRequest.getPaymentStatus()));
+        payment.setPaymentDate(new Date());
+        payment.setOrder(order);
+        payment.setTransactionId(paymentRequest.getTransactionId());
+        payment.setPaymentAmount(paymentRequest.getPaymentAmount());
 
-        // Gửi sự kiện Payment Successful đến Kafka
-        PaymentResponse paymentResponse = new PaymentResponse();
-        paymentResponse.setOrderId(idOrder);
-        paymentResponse.setIsPayed(isPayed);
-        paymentResponse.setPaymentStatus(paymentStatus);
-
-        return true;
+        PaymentEntity savedPayment = paymentRepository.save(payment);
+        return new PaymentResponse(savedPayment.getId(), savedPayment.getIsPayed(), savedPayment.getPaymentStatus().getStatus(),
+                savedPayment.getPaymentDate(), savedPayment.getOrder().getId(), savedPayment.getTransactionId(), savedPayment.getPaymentAmount());
     }
+
 
 
     @Override

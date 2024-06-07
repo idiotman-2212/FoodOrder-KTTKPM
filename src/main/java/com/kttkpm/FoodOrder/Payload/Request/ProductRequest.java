@@ -3,16 +3,18 @@ package com.kttkpm.FoodOrder.Payload.Request;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
-@Builder
-@AllArgsConstructor
+
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
 public class ProductRequest {
+    private int id; // Thêm trường id
     @NotNull(message = "File không được phép rỗng")
     private MultipartFile file;
 
@@ -23,8 +25,6 @@ public class ProductRequest {
     private double price;
     private String description;
     private String categoryName;
+    private int categoryId;
     private int quantity;
-    private Date createDate;
-
-
 }

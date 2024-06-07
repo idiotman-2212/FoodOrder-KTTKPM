@@ -101,7 +101,7 @@ public class OrderService implements OrderServiceImp {
         OrderEntity savedOrder = orderRepository.save(order);
 
         cartRepository.deleteAll(cartItems);
-        
+
         return new OrderResponse(
                 savedOrder.getId(),
                 savedOrder.getUser().getId(),
@@ -266,6 +266,17 @@ public class OrderService implements OrderServiceImp {
 
         List<OrderResponse> sublist = allOrder.subList(start, end);
         return new PageImpl<>(sublist, pageable, allOrder.size());
+    }
+
+    @Override
+    public Page<OrderResponse> getAllPageOrderByIdUser(Integer pageNo, Integer id) {
+        int pageSize = 5;
+        List<OrderResponse> allOrders = getOrderByIdUser(id);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allOrders.size());
+        List<OrderResponse> sublist = allOrders.subList(start, end);
+        return new PageImpl<>(sublist, pageable, allOrders.size());
     }
 
     public OrderResponse updateOrderDesc(int userId, String orderDesc) {

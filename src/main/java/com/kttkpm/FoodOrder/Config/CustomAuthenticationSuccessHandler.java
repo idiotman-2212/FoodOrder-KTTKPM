@@ -26,14 +26,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         log.info(authorities.toString());
         for (GrantedAuthority authority : authorities) {
             log.info(authority.getAuthority());
-<<<<<<< HEAD
             if (authority.getAuthority().equals("ROLE_ADMIN")) {
-=======
-            if (authority.getAuthority().equals("ADMIN")) {
->>>>>>> origin/tai-dev
                 redirectUrl = "/admin";
                 break;
-            } else if (authority.getAuthority().equals("USER")) {
+            } else if (authority.getAuthority().equals("ROLE_USER")) {
                 redirectUrl = "/users";
                 break;
             }

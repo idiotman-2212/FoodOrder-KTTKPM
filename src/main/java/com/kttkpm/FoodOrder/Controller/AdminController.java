@@ -55,6 +55,7 @@ public class AdminController {
     CategoryRepository categoryRepository;
     @Autowired
     private OrderService orderService;
+
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -141,7 +142,8 @@ public class AdminController {
             SignUpRequest userDTO = new SignUpRequest();
             userDTO.setId(user.getId());
             userDTO.setEmail(user.getEmail());
-
+            userDTO.setPhone(user.getPhone());
+            userDTO.setAddress(user.getAddress());
             userDTO.setPassword(null);
             userDTO.setUsername(user.getUsername());
 
@@ -333,7 +335,20 @@ public class AdminController {
         Optional<ProductEntity> productOptional = productRepository.findById(id);
         if (productOptional.isPresent()) {
             ProductEntity productEntity = productOptional.get();
-            model.addAttribute("productRequest", productEntity);
+
+            // Chuyển đổi ProductEntity sang ProductRequest
+            ProductRequest productRequest = new ProductRequest();
+            productRequest.setId(productEntity.getId());
+            productRequest.setName(productEntity.getName());
+            productRequest.setImage(productEntity.getImage());
+            productRequest.setPrice(productEntity.getPrice());
+            productRequest.setQuantity(productEntity.getQuantity());
+            productRequest.setDescription(productEntity.getDescription());
+            productRequest.setCategoryId(productEntity.getCategory().getId());
+            productRequest.setCategoryName(productEntity.getCategory().getName());
+           // productRequest.setCreateDate(productEntity.getCreateDate());
+
+            model.addAttribute("productRequest", productRequest);
             model.addAttribute("categories", categoryService.getAllCategory());
 
             return "productsEdit";
@@ -341,15 +356,12 @@ public class AdminController {
             return "redirect:/404";
         }
     }
+
+
+
     @PostMapping("/product/update/{id}")
-    public String processUpdateProduct(@ModelAttribute("productRequest") ProductRequest productDTO,
+    public String processUpdateProduct(@ModelAttribute("productRequest") ProductRequest productRequest,
                                        @PathVariable("id") String idStr,
-                                       @RequestParam("file") MultipartFile file,
-                                       @RequestParam("price") double price,
-                                       @RequestParam("quantity") int quantity,
-                                       @RequestParam("name") String name,
-                                       @RequestParam("category") int categoryId,
-                                       @RequestParam("description") String description,
                                        Model model) throws IOException {
         int id;
         try {
@@ -366,12 +378,13 @@ public class AdminController {
             String rootFolder = "src/main/resources/static/images";
 
             // Cập nhật thông tin sản phẩm
-            productEntity.setName(name);
-            productEntity.setPrice(price);
-            productEntity.setQuantity(quantity);
-            productEntity.setDescription(description);
+            productEntity.setName(productRequest.getName());
+            productEntity.setPrice(productRequest.getPrice());
+            productEntity.setQuantity(productRequest.getQuantity());
+            productEntity.setDescription(productRequest.getDescription());
 
             // Lưu ảnh nếu người dùng chọn ảnh mới
+            MultipartFile file = productRequest.getFile();
             if (!file.isEmpty()) {
                 String oldImage = productEntity.getImage();
                 if (oldImage != null) {
@@ -386,7 +399,7 @@ public class AdminController {
                 productEntity.setImage(newImage);
             }
 
-            CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
+            CategoryEntity categoryEntity = categoryRepository.findById(productRequest.getCategoryId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
             productEntity.setCategory(categoryEntity);
 
@@ -397,6 +410,7 @@ public class AdminController {
             return "404";
         }
     }
+
 
     //Order session
     @GetMapping("/orders")
