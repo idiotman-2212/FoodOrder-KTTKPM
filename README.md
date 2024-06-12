@@ -14,7 +14,7 @@
 # 4. Lượt đồ CSDL
 ![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/158b218c-5e4e-4d74-862b-cc2b44f17431)
 
-Script để tạo cơ sở dữ liệu có để trong thư mục **/src/main/resource/application.properties** của dự án
+Script để tạo cơ sở dữ liệu có để trong thư mục **/src/main/resource/** của dự án
 
 # 5. Giao diện chung
 - Trang đăng nhập
