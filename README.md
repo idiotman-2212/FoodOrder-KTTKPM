@@ -2,7 +2,7 @@
 ## Xây dựng hệ thống đặt đồ ăn online
 # 1. Công nghệ sử dụng
 - Ngôn ngữ lập trình: Java
-- Framework: Spring boot, Security
+- Framework: Spring boot, Spring Security, Data Jpa,...
 - Library: Thymeleaf
 - Mô hình MVC
 - Cơ sở dữ liệu: MySQL
