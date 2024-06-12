@@ -1,48 +1,60 @@
 # Lập trình web
-Trang web đặt đồ ăn online
-# Công nghệ sử dụng
+Xây dựng hệ thống đặt đồ ăn online
+# 1. Công nghệ sử dụng
 - Ngôn ngữ lập trình: Java
-- Framework: Spring boot
+- Framework: Spring boot, Security
+- Library: Thymeleaf
+- Mô dình MVC
 
-- Trang login, register, forgotpassword
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/e291799a-f2de-4bb2-875b-86466cd2fd7d)
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/f22766ed-3980-4d2a-b39a-51fe6fc06170)
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/5ee146e3-19ef-4d3f-9b80-da917122d51b)
+# 2. Workflow hệ thống
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/d5b7f53d-53f2-499c-9a50-89c0e53bad17)
+# 3. Lượt đồ ERD
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/a480b1c1-dda3-40df-b391-43f677f4ca31)
+# 4. Lượt đồ CSDL
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/158b218c-5e4e-4d74-862b-cc2b44f17431)
 
-- Design pattern dùng trong dự án: Singleton, Factory
-- Singleton:
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/b6ae1b80-fd53-4b6c-87cb-27dff72240ab)
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/35ca9feb-0940-49b2-a482-2b24d6230c6c)
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/c7de18bb-ed0c-4243-a14e-6324b79171af)
+Script để tạo cơ sở dữ liệu có để trong thư mục **/src/main/resource/application.properties** của dự án
 
-- Factory:
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/df48565c-93b1-4d07-a295-aac9042e385f)
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/7fa539be-e6ea-43b2-9c0f-9779e06b6c42)
+# 5. Giao diện chung
+- Trang đăng nhập
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/4f285e31-438a-4bd0-967b-9b4d08336582)
+- Trang đăng ký
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/283054b1-4fad-4619-bc0d-b01ca9f66eab)
+- Trang quên mật khẩu
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/dda9d875-d21e-46b3-9977-ffaf911ee4f5)
 
+# 6. Giao diện Admin
+- Giao diện màn hình chính
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/044ed978-e9df-4946-8556-259a28c1e1b2)
+- Quản lý danh sách người dùng (CRUD)
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/1aa35c47-b683-40b4-ac5e-5f28dd9e0fe4)
+- Quản lý danh sách danh mục (CRUD)
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/ef6fe77e-f9cb-420f-bc85-e3d5b7ab0340)
+- Quản lý danh sách sản phẩm (CRUD)
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/be640998-279b-47ec-941d-1f41e81dd45c)
+- Quản lý danh sách đơn hàng (Sửa trạng thái đơn hàng)
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/023f8e01-9473-4370-8e84-cec7b65deb1b)
 
+# 7. Giao diện người dùng
+- Giao diện màn hình chính
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/4de5cfa4-0f59-440b-94a2-5fe52cf6b975)
+- Chỉnh sửa thông tin cá nhân người dùng
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/432d7ee0-3805-48bd-aafa-f551a1d79dc6)
+- Xem tất cả sản phẩm (Có lọc sản phẩm theo danh mục)
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/cfa80fa2-9d73-4b9a-ad7c-201e1a7c22e8)
+- Xem chi tiết sản phẩm
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/42572c73-ccbc-4739-bebb-b03f14854a65)
+- Xem giỏ hàng
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/bfd47637-3d1c-4794-a942-bd6a2509390c)
+- Đặt hàng
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/8a419724-25fd-4c9d-8f24-2378eb66504b)
 
-
-
-- Trang người dùng
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/60b5f19b-04bd-4701-8a02-078419578d02)
-- Trang sản phẩm
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/e1dcff59-2c9e-44ac-9812-d0f6342c6473)
-- Trang blog
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/389d3d15-40e5-442c-a9e0-7fc323d59081)
-- Trang about
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/0edf1235-1238-4055-b6f5-6f63d957230e)
-- Trang contact
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/3cfa8422-7fb4-47e8-8a95-29c33af5b8b8)
-- Trang cart
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/517572f8-229d-4ec8-9ddb-9b1bc0f19ec1)
-- Trang checkout
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/71789a8c-1452-4d87-a13a-e19d5cd53687)
-
--Trang quản trị
-![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/9b719af8-c146-4e0e-ab32-02a065bc3e9d)
-
-
-
-
+# 8. Hướng dẫn cài đặt
+- Vào Terminal/Cmd gõ "git clone https://github.com/idiotman-2212/FoodOrder-KTTKPM.git" hoặc có thể Download Zip và giải nén thư mục
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/f5347ff0-780d-4387-b1c8-52f62a8a8dcb)
+- Vào **/src/main/resource/application.properties** chỉnh sửa thông tin kết nối với MySQL
+![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/2f4526e5-9fff-4894-a90c-bc51da4e3ea0)
+### Khởi chạy dự án 
+- Vào Terminal trên IDE dùng lệnh <pre>mvn clean install</pre> sau đó gõ lệnh <pre>mvn spring-boot:run</pre>
 
 
