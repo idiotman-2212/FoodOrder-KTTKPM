@@ -1,10 +1,11 @@
 # Lập trình web
-Xây dựng hệ thống đặt đồ ăn online
+## Xây dựng hệ thống đặt đồ ăn online
 # 1. Công nghệ sử dụng
 - Ngôn ngữ lập trình: Java
 - Framework: Spring boot, Security
 - Library: Thymeleaf
-- Mô dình MVC
+- Mô hình MVC
+- Cơ sở dữ liệu: MySQL
 
 # 2. Workflow hệ thống
 ![image](https://github.com/idiotman-2212/FoodOrder-KTTKPM/assets/82036270/d5b7f53d-53f2-499c-9a50-89c0e53bad17)
